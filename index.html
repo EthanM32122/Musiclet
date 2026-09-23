@@ -140,7 +140,7 @@
               <div class="stat-label">Wins</div>
             </div>
             <div class="stat-card">
-              <div class="stat-value" id="statCoins">100</div>
+              <div class="stat-value" id="statCoins">500</div>
               <div class="stat-label">Coins</div>
             </div>
             <div class="stat-card">
@@ -150,31 +150,168 @@
           </div>
         </section>
 
-        <!-- MARKET SECTION (EMPTY) -->
+        <!-- MARKET SECTION - BLOOKET PACKS -->
         <section id="section-market" class="content-section">
           <h1 class="section-title">🛒 Market</h1>
-          <p class="section-desc">Buy cool items with your coins</p>
-          <div class="empty-state">
-            <div class="empty-emoji">🛒</div>
-            <p>The market is currently empty.</p>
-            <p class="empty-sub">Check back later for new items!</p>
+          <p class="section-desc">Open packs just like Blooket! (All classic packs)</p>
+          
+          <div class="pack-grid" id="packGrid">
+            <!-- Permanent Packs -->
+            <div class="pack-card" data-pack="Space Pack" data-cost="20" data-emoji="🚀">
+              <div class="pack-emoji">🚀</div>
+              <div class="pack-name">Space Pack</div>
+              <div class="pack-cost">20 coins</div>
+              <button class="btn btn-open" onclick="openPack('Space Pack', 20, '🚀')">Open Pack</button>
+            </div>
+            <div class="pack-card" data-pack="Breakfast Pack" data-cost="20" data-emoji="🥞">
+              <div class="pack-emoji">🥞</div>
+              <div class="pack-name">Breakfast Pack</div>
+              <div class="pack-cost">20 coins</div>
+              <button class="btn btn-open" onclick="openPack('Breakfast Pack', 20, '🥞')">Open Pack</button>
+            </div>
+            <div class="pack-card" data-pack="Medieval Pack" data-cost="20" data-emoji="⚔️">
+              <div class="pack-emoji">⚔️</div>
+              <div class="pack-name">Medieval Pack</div>
+              <div class="pack-cost">20 coins</div>
+              <button class="btn btn-open" onclick="openPack('Medieval Pack', 20, '⚔️')">Open Pack</button>
+            </div>
+            <div class="pack-card" data-pack="Wonderland Pack" data-cost="20" data-emoji="🃏">
+              <div class="pack-emoji">🃏</div>
+              <div class="pack-name">Wonderland Pack</div>
+              <div class="pack-cost">20 coins</div>
+              <button class="btn btn-open" onclick="openPack('Wonderland Pack', 20, '🃏')">Open Pack</button>
+            </div>
+            <div class="pack-card" data-pack="Bot Pack" data-cost="20" data-emoji="🤖">
+              <div class="pack-emoji">🤖</div>
+              <div class="pack-name">Bot Pack</div>
+              <div class="pack-cost">20 coins</div>
+              <button class="btn btn-open" onclick="openPack('Bot Pack', 20, '🤖')">Open Pack</button>
+            </div>
+            <div class="pack-card" data-pack="Aquatic Pack" data-cost="20" data-emoji="🐠">
+              <div class="pack-emoji">🐠</div>
+              <div class="pack-name">Aquatic Pack</div>
+              <div class="pack-cost">20 coins</div>
+              <button class="btn btn-open" onclick="openPack('Aquatic Pack', 20, '🐠')">Open Pack</button>
+            </div>
+            <div class="pack-card" data-pack="Safari Pack" data-cost="20" data-emoji="🦒">
+              <div class="pack-emoji">🦒</div>
+              <div class="pack-name">Safari Pack</div>
+              <div class="pack-cost">20 coins</div>
+              <button class="btn btn-open" onclick="openPack('Safari Pack', 20, '🦒')">Open Pack</button>
+            </div>
+            <div class="pack-card" data-pack="Dino Pack" data-cost="25" data-emoji="🦖">
+              <div class="pack-emoji">🦖</div>
+              <div class="pack-name">Dino Pack</div>
+              <div class="pack-cost">25 coins</div>
+              <button class="btn btn-open" onclick="openPack('Dino Pack', 25, '🦖')">Open Pack</button>
+            </div>
+            <div class="pack-card" data-pack="Ice Monster Pack" data-cost="25" data-emoji="🧊">
+              <div class="pack-emoji">🧊</div>
+              <div class="pack-name">Ice Monster Pack</div>
+              <div class="pack-cost">25 coins</div>
+              <button class="btn btn-open" onclick="openPack('Ice Monster Pack', 25, '🧊')">Open Pack</button>
+            </div>
+            <div class="pack-card" data-pack="Outback Pack" data-cost="25" data-emoji="🦘">
+              <div class="pack-emoji">🦘</div>
+              <div class="pack-name">Outback Pack</div>
+              <div class="pack-cost">25 coins</div>
+              <button class="btn btn-open" onclick="openPack('Outback Pack', 25, '🦘')">Open Pack</button>
+            </div>
+            <div class="pack-card" data-pack="Pirate Pack" data-cost="25" data-emoji="🏴‍☠️">
+              <div class="pack-emoji">🏴‍☠️</div>
+              <div class="pack-name">Pirate Pack</div>
+              <div class="pack-cost">25 coins</div>
+              <button class="btn btn-open" onclick="openPack('Pirate Pack', 25, '🏴‍☠️')">Open Pack</button>
+            </div>
+            <div class="pack-card" data-pack="Bug Pack" data-cost="25" data-emoji="🦋">
+              <div class="pack-emoji">🦋</div>
+              <div class="pack-name">Bug Pack</div>
+              <div class="pack-cost">25 coins</div>
+              <button class="btn btn-open" onclick="openPack('Bug Pack', 25, '🦋')">Open Pack</button>
+            </div>
+            <div class="pack-card" data-pack="Lunch Pack" data-cost="25" data-emoji="🥪">
+              <div class="pack-emoji">🥪</div>
+              <div class="pack-name">Lunch Pack</div>
+              <div class="pack-cost">25 coins</div>
+              <button class="btn btn-open" onclick="openPack('Lunch Pack', 25, '🥪')">Open Pack</button>
+            </div>
+            <div class="pack-card" data-pack="Dog Pack" data-cost="25" data-emoji="🐕">
+              <div class="pack-emoji">🐕</div>
+              <div class="pack-name">Dog Pack</div>
+              <div class="pack-cost">25 coins</div>
+              <button class="btn btn-open" onclick="openPack('Dog Pack', 25, '🐕')">Open Pack</button>
+            </div>
+
+            <!-- Seasonal Packs -->
+            <div class="pack-card seasonal" data-pack="Spooky Pack" data-cost="25" data-emoji="🎃">
+              <div class="pack-badge">Seasonal</div>
+              <div class="pack-emoji">🎃</div>
+              <div class="pack-name">Spooky Pack</div>
+              <div class="pack-cost">25 coins</div>
+              <button class="btn btn-open" onclick="openPack('Spooky Pack', 25, '🎃')">Open Pack</button>
+            </div>
+            <div class="pack-card seasonal" data-pack="Autumn Pack" data-cost="25" data-emoji="🍂">
+              <div class="pack-badge">Seasonal</div>
+              <div class="pack-emoji">🍂</div>
+              <div class="pack-name">Autumn Pack</div>
+              <div class="pack-cost">25 coins</div>
+              <button class="btn btn-open" onclick="openPack('Autumn Pack', 25, '🍂')">Open Pack</button>
+            </div>
+            <div class="pack-card seasonal" data-pack="Blizzard Pack" data-cost="25" data-emoji="❄️">
+              <div class="pack-badge">Seasonal</div>
+              <div class="pack-emoji">❄️</div>
+              <div class="pack-name">Blizzard Pack</div>
+              <div class="pack-cost">25 coins</div>
+              <button class="btn btn-open" onclick="openPack('Blizzard Pack', 25, '❄️')">Open Pack</button>
+            </div>
+            <div class="pack-card seasonal" data-pack="Lovely Pack" data-cost="50" data-emoji="💝">
+              <div class="pack-badge">Seasonal</div>
+              <div class="pack-emoji">💝</div>
+              <div class="pack-name">Lovely Pack</div>
+              <div class="pack-cost">50 coins</div>
+              <button class="btn btn-open" onclick="openPack('Lovely Pack', 50, '💝')">Open Pack</button>
+            </div>
+            <div class="pack-card seasonal" data-pack="Lucky Pack" data-cost="50" data-emoji="🍀">
+              <div class="pack-badge">Seasonal</div>
+              <div class="pack-emoji">🍀</div>
+              <div class="pack-name">Lucky Pack</div>
+              <div class="pack-cost">50 coins</div>
+              <button class="btn btn-open" onclick="openPack('Lucky Pack', 50, '🍀')">Open Pack</button>
+            </div>
+            <div class="pack-card seasonal" data-pack="Spring Pack" data-cost="50" data-emoji="🌸">
+              <div class="pack-badge">Seasonal</div>
+              <div class="pack-emoji">🌸</div>
+              <div class="pack-name">Spring Pack</div>
+              <div class="pack-cost">50 coins</div>
+              <button class="btn btn-open" onclick="openPack('Spring Pack', 50, '🌸')">Open Pack</button>
+            </div>
           </div>
         </section>
 
         <!-- MUSICS = INVENTORY SECTION -->
         <section id="section-musics" class="content-section">
           <h1 class="section-title">🎒 Musics (Inventory)</h1>
-          <p class="section-desc">Your collected items and stuff</p>
+          <p class="section-desc">Your collected items from packs</p>
           <div id="inventoryGrid" class="inventory-grid">
             <!-- Items will appear here -->
           </div>
           <div id="inventoryEmpty" class="empty-state">
             <div class="empty-emoji">🎒</div>
             <p>Your inventory is empty.</p>
-            <p class="empty-sub">Buy items from the Market to see them here!</p>
+            <p class="empty-sub">Open packs from the Market to collect items!</p>
           </div>
         </section>
       </main>
+    </div>
+  </div>
+
+  <!-- Pack Result Modal -->
+  <div id="packModal" class="modal hidden">
+    <div class="modal-content">
+      <div id="modalEmoji" class="modal-emoji">🎁</div>
+      <h2 id="modalTitle">You got...</h2>
+      <p id="modalItem" class="modal-item"></p>
+      <button class="btn btn-modal" onclick="closeModal()">Awesome!</button>
     </div>
   </div>
 

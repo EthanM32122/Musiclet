@@ -23,6 +23,20 @@ function setCurrentUser(username) {
   }
 }
 
+function getCoins() {
+  const user = getCurrentUser();
+  if (!user) return 0;
+  return parseInt(localStorage.getItem("musiclet_coins_" + user) || "500", 10);
+}
+
+function setCoins(amount) {
+  const user = getCurrentUser();
+  if (!user) return;
+  localStorage.setItem("musiclet_coins_" + user, amount);
+  const el = document.getElementById("statCoins");
+  if (el) el.textContent = amount;
+}
+
 // ========== PAGE NAVIGATION ==========
 function showPage(pageId) {
   document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
@@ -36,12 +50,8 @@ function showPage(pageId) {
   if (regSuccess) regSuccess.textContent = "";
   if (loginError) loginError.textContent = "";
 
-  if (pageId === "register") {
-    document.getElementById("registerForm")?.reset();
-  }
-  if (pageId === "login") {
-    document.getElementById("loginForm")?.reset();
-  }
+  if (pageId === "register") document.getElementById("registerForm")?.reset();
+  if (pageId === "login") document.getElementById("loginForm")?.reset();
 }
 
 // ========== SIDEBAR SECTIONS ==========
@@ -57,9 +67,10 @@ function showSection(sectionId) {
     }
   });
 
-  // Refresh inventory when opening Musics
-  if (sectionId === "musics") {
-    renderInventory();
+  if (sectionId === "musics") renderInventory();
+  if (sectionId === "stats") {
+    const coinsEl = document.getElementById("statCoins");
+    if (coinsEl) coinsEl.textContent = getCoins();
   }
 }
 
@@ -72,6 +83,12 @@ function getInventory() {
   } catch {
     return [];
   }
+}
+
+function saveInventory(items) {
+  const user = getCurrentUser();
+  if (!user) return;
+  localStorage.setItem("musiclet_inventory_" + user, JSON.stringify(items));
 }
 
 function renderInventory() {
@@ -90,9 +107,67 @@ function renderInventory() {
       <div class="inventory-item">
         <div class="item-emoji">${item.emoji}</div>
         <div class="item-name">${item.name}</div>
+        <div class="item-pack">from ${item.pack}</div>
       </div>
     `).join("");
   }
+}
+
+// ========== PACK OPENING ==========
+const packItems = {
+  "Space Pack": ["Astronaut", "Alien", "UFO", "Planet", "Rocket", "Moon", "Star", "Galaxy"],
+  "Breakfast Pack": ["Pancake", "Waffle", "Bacon", "Egg", "Toast", "Cereal", "Orange Juice", "Syrup"],
+  "Medieval Pack": ["King", "Queen", "Knight", "Dragon", "Wizard", "Castle", "Sword", "Shield"],
+  "Wonderland Pack": ["King of Hearts", "Queen of Hearts", "Alice", "Mad Hatter", "Cheshire Cat", "White Rabbit"],
+  "Bot Pack": ["Mega Bot", "Basic Bot", "Robot Dog", "Drone", "Cyborg", "AI Core"],
+  "Aquatic Pack": ["Shark", "Octopus", "Jellyfish", "Dolphin", "Whale", "Seahorse", "Coral"],
+  "Safari Pack": ["Lion", "Tiger", "Giraffe", "Zebra", "Elephant", "Panda", "Monkey"],
+  "Dino Pack": ["T-Rex", "Triceratops", "Pterodactyl", "Stegosaurus", "Velociraptor", "Fossil"],
+  "Ice Monster Pack": ["Yeti", "Ice Slime", "Frozen Fossil", "Ice Crab", "Snow Beast", "Glacier"],
+  "Outback Pack": ["Kangaroo", "Koala", "Platypus", "Sugar Glider", "Dingo", "Emu"],
+  "Pirate Pack": ["Captain Blackbeard", "Pirate Ship", "Treasure Chest", "Parrot", "Cannon", "Map"],
+  "Bug Pack": ["Butterfly", "Beetle", "Spider", "Dragonfly", "Ladybug", "Ant", "Moth"],
+  "Lunch Pack": ["Sandwich", "Pizza", "Burger", "Taco", "Fries", "Soda", "Cookie"],
+  "Dog Pack": ["Golden Retriever", "Poodle", "Bulldog", "Husky", "Corgi", "Beagle"],
+  "Spooky Pack": ["Ghost", "Vampire", "Pumpkin", "Witch", "Skeleton", "Bat", "Zombie"],
+  "Autumn Pack": ["Turkey", "Pumpkin Pie", "Leaf", "Acorn", "Scarecrow", "Corn"],
+  "Blizzard Pack": ["Santa", "Snowman", "Reindeer", "Snow Globe", "Gift", "Candy Cane"],
+  "Lovely Pack": ["Heart", "Rose", "Cupid", "Love Letter", "Chocolate"],
+  "Lucky Pack": ["Clover", "Leprechaun", "Pot of Gold", "Rainbow", "Horseshoe"],
+  "Spring Pack": ["Bunny", "Chick", "Flower", "Egg", "Butterfly"]
+};
+
+function openPack(packName, cost, emoji) {
+  const coins = getCoins();
+  if (coins < cost) {
+    alert("Not enough coins! You need " + cost + " coins.");
+    return;
+  }
+
+  setCoins(coins - cost);
+
+  const possible = packItems[packName] || ["Mystery Item"];
+  const itemName = possible[Math.floor(Math.random() * possible.length)];
+
+  // Add to inventory
+  const inv = getInventory();
+  inv.push({
+    name: itemName,
+    emoji: emoji,
+    pack: packName,
+    time: Date.now()
+  });
+  saveInventory(inv);
+
+  // Show modal
+  document.getElementById("modalEmoji").textContent = emoji;
+  document.getElementById("modalTitle").textContent = "You opened " + packName + "!";
+  document.getElementById("modalItem").textContent = itemName;
+  document.getElementById("packModal").classList.remove("hidden");
+}
+
+function closeModal() {
+  document.getElementById("packModal").classList.add("hidden");
 }
 
 // ========== PASSWORD TOGGLE ==========
@@ -141,6 +216,9 @@ function handleRegister(e) {
   };
   saveUsers(users);
 
+  // Give starting coins
+  localStorage.setItem("musiclet_coins_" + username, "500");
+
   successEl.textContent = "Account created! Redirecting to login…";
   setTimeout(() => {
     showPage("login");
@@ -167,6 +245,12 @@ function handleLogin(e) {
 
   setCurrentUser(user.username);
   document.getElementById("sideUsername").textContent = user.username;
+
+  // Ensure coins exist
+  if (!localStorage.getItem("musiclet_coins_" + user.username)) {
+    localStorage.setItem("musiclet_coins_" + user.username, "500");
+  }
+
   showPage("dashboard");
   showSection("stats");
 }
