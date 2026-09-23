@@ -37,13 +37,31 @@ function showPage(pageId) {
   if (regSuccess) regSuccess.textContent = "";
   if (loginError) loginError.textContent = "";
 
-  // Clear form fields when switching
   if (pageId === "register") {
     document.getElementById("registerForm")?.reset();
   }
   if (pageId === "login") {
     document.getElementById("loginForm")?.reset();
   }
+}
+
+// ========== SIDEBAR SECTIONS ==========
+function showSection(sectionId) {
+  // Hide all sections
+  document.querySelectorAll(".content-section").forEach((s) => s.classList.remove("active"));
+  // Show selected
+  const section = document.getElementById("section-" + sectionId);
+  if (section) section.classList.add("active");
+
+  // Update nav active state
+  document.querySelectorAll(".nav-item").forEach((item) => item.classList.remove("active"));
+  // Find and activate the clicked one
+  const items = document.querySelectorAll(".nav-item");
+  items.forEach((item) => {
+    if (item.getAttribute("onclick")?.includes(sectionId)) {
+      item.classList.add("active");
+    }
+  });
 }
 
 // ========== PASSWORD TOGGLE ==========
@@ -85,10 +103,9 @@ function handleRegister(e) {
     return;
   }
 
-  // Store with original casing for display, key is lowercased
   users[username.toLowerCase()] = {
     username: username,
-    password: password, // plain text for this demo (not for production!)
+    password: password,
     created: Date.now(),
   };
   saveUsers(users);
@@ -118,8 +135,9 @@ function handleLogin(e) {
   }
 
   setCurrentUser(user.username);
-  document.getElementById("dashUsername").textContent = user.username;
+  document.getElementById("sideUsername").textContent = user.username;
   showPage("dashboard");
+  showSection("stats");
 }
 
 // ========== LOGOUT ==========
@@ -132,8 +150,9 @@ function handleLogout() {
 document.addEventListener("DOMContentLoaded", () => {
   const current = getCurrentUser();
   if (current) {
-    document.getElementById("dashUsername").textContent = current;
+    document.getElementById("sideUsername").textContent = current;
     showPage("dashboard");
+    showSection("stats");
   } else {
     showPage("landing");
   }

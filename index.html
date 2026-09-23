@@ -93,16 +93,127 @@
 
   <!-- ========== DASHBOARD (after login) ========== -->
   <div id="dashboard" class="page">
-    <div class="dash-card">
-      <div class="logo-box small">
-        <div class="logo-m">M</div>
-        <div class="logo-text">Musiclet</div>
-      </div>
-      <h1>Welcome, <span id="dashUsername"></span>!</h1>
-      <p class="dash-sub">You're logged into Musiclet.</p>
-      <p class="dash-note">This is a Blooket-inspired music quiz platform.<br />More features coming soon!</p>
-      <button class="btn btn-logout" onclick="handleLogout()">Log Out</button>
-      <button class="btn btn-back" onclick="showPage('landing')">Back to Home</button>
+    <div class="app-layout">
+      <!-- LEFT NAVBAR -->
+      <nav class="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-box small">
+            <div class="logo-m">M</div>
+            <div class="logo-text">Musiclet</div>
+          </div>
+        </div>
+
+        <ul class="nav-menu">
+          <li class="nav-item active" onclick="showSection('stats')">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">Stats</span>
+          </li>
+          <li class="nav-item" onclick="showSection('market')">
+            <span class="nav-icon">🛒</span>
+            <span class="nav-label">Market</span>
+          </li>
+          <li class="nav-item" onclick="showSection('musics')">
+            <span class="nav-icon">🎵</span>
+            <span class="nav-label">Musics</span>
+          </li>
+        </ul>
+
+        <div class="sidebar-footer">
+          <p class="user-info">Logged in as<br><strong id="sideUsername"></strong></p>
+          <button class="btn btn-logout-small" onclick="handleLogout()">Log Out</button>
+        </div>
+      </nav>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-content">
+        <!-- STATS SECTION -->
+        <section id="section-stats" class="content-section active">
+          <h1 class="section-title">📊 Stats</h1>
+          <p class="section-desc">Your Musiclet statistics</p>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value" id="statGames">0</div>
+              <div class="stat-label">Games Played</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statWins">0</div>
+              <div class="stat-label">Wins</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statCoins">100</div>
+              <div class="stat-label">Coins</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statLevel">1</div>
+              <div class="stat-label">Level</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MARKET SECTION -->
+        <section id="section-market" class="content-section">
+          <h1 class="section-title">🛒 Market</h1>
+          <p class="section-desc">Buy cool items with your coins</p>
+          <div class="market-grid">
+            <div class="market-item">
+              <div class="item-emoji">🎧</div>
+              <div class="item-name">Cool Headphones</div>
+              <div class="item-price">50 coins</div>
+              <button class="btn btn-buy">Buy</button>
+            </div>
+            <div class="market-item">
+              <div class="item-emoji">🎤</div>
+              <div class="item-name">Golden Mic</div>
+              <div class="item-price">120 coins</div>
+              <button class="btn btn-buy">Buy</button>
+            </div>
+            <div class="market-item">
+              <div class="item-emoji">🎸</div>
+              <div class="item-name">Electric Guitar</div>
+              <div class="item-price">200 coins</div>
+              <button class="btn btn-buy">Buy</button>
+            </div>
+            <div class="market-item">
+              <div class="item-emoji">🎹</div>
+              <div class="item-name">Keyboard</div>
+              <div class="item-price">150 coins</div>
+              <button class="btn btn-buy">Buy</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- MUSICS SECTION -->
+        <section id="section-musics" class="content-section">
+          <h1 class="section-title">🎵 Musics</h1>
+          <p class="section-desc">Choose a music quiz to play</p>
+          <div class="musics-grid">
+            <div class="music-card">
+              <div class="music-emoji">🔥</div>
+              <div class="music-name">Pop Hits</div>
+              <div class="music-desc">Guess the popular songs</div>
+              <button class="btn btn-play">Play</button>
+            </div>
+            <div class="music-card">
+              <div class="music-emoji">🎸</div>
+              <div class="music-name">Rock Classics</div>
+              <div class="music-desc">Legendary rock tracks</div>
+              <button class="btn btn-play">Play</button>
+            </div>
+            <div class="music-card">
+              <div class="music-emoji">🎤</div>
+              <div class="music-name">Rap Battle</div>
+              <div class="music-desc">Hip-hop & rap quiz</div>
+              <button class="btn btn-play">Play</button>
+            </div>
+            <div class="music-card">
+              <div class="music-emoji">🎹</div>
+              <div class="music-name">Instrumental</div>
+              <div class="music-desc">Guess the melody</div>
+              <button class="btn btn-play">Play</button>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
   </div>
 
