@@ -113,7 +113,7 @@
             <span class="nav-label">Market</span>
           </li>
           <li class="nav-item" onclick="showSection('musics')">
-            <span class="nav-icon">🎵</span>
+            <span class="nav-icon">🎒</span>
             <span class="nav-label">Musics</span>
           </li>
         </ul>
@@ -150,67 +150,28 @@
           </div>
         </section>
 
-        <!-- MARKET SECTION -->
+        <!-- MARKET SECTION (EMPTY) -->
         <section id="section-market" class="content-section">
           <h1 class="section-title">🛒 Market</h1>
           <p class="section-desc">Buy cool items with your coins</p>
-          <div class="market-grid">
-            <div class="market-item">
-              <div class="item-emoji">🎧</div>
-              <div class="item-name">Cool Headphones</div>
-              <div class="item-price">50 coins</div>
-              <button class="btn btn-buy">Buy</button>
-            </div>
-            <div class="market-item">
-              <div class="item-emoji">🎤</div>
-              <div class="item-name">Golden Mic</div>
-              <div class="item-price">120 coins</div>
-              <button class="btn btn-buy">Buy</button>
-            </div>
-            <div class="market-item">
-              <div class="item-emoji">🎸</div>
-              <div class="item-name">Electric Guitar</div>
-              <div class="item-price">200 coins</div>
-              <button class="btn btn-buy">Buy</button>
-            </div>
-            <div class="market-item">
-              <div class="item-emoji">🎹</div>
-              <div class="item-name">Keyboard</div>
-              <div class="item-price">150 coins</div>
-              <button class="btn btn-buy">Buy</button>
-            </div>
+          <div class="empty-state">
+            <div class="empty-emoji">🛒</div>
+            <p>The market is currently empty.</p>
+            <p class="empty-sub">Check back later for new items!</p>
           </div>
         </section>
 
-        <!-- MUSICS SECTION -->
+        <!-- MUSICS = INVENTORY SECTION -->
         <section id="section-musics" class="content-section">
-          <h1 class="section-title">🎵 Musics</h1>
-          <p class="section-desc">Choose a music quiz to play</p>
-          <div class="musics-grid">
-            <div class="music-card">
-              <div class="music-emoji">🔥</div>
-              <div class="music-name">Pop Hits</div>
-              <div class="music-desc">Guess the popular songs</div>
-              <button class="btn btn-play">Play</button>
-            </div>
-            <div class="music-card">
-              <div class="music-emoji">🎸</div>
-              <div class="music-name">Rock Classics</div>
-              <div class="music-desc">Legendary rock tracks</div>
-              <button class="btn btn-play">Play</button>
-            </div>
-            <div class="music-card">
-              <div class="music-emoji">🎤</div>
-              <div class="music-name">Rap Battle</div>
-              <div class="music-desc">Hip-hop & rap quiz</div>
-              <button class="btn btn-play">Play</button>
-            </div>
-            <div class="music-card">
-              <div class="music-emoji">🎹</div>
-              <div class="music-name">Instrumental</div>
-              <div class="music-desc">Guess the melody</div>
-              <button class="btn btn-play">Play</button>
-            </div>
+          <h1 class="section-title">🎒 Musics (Inventory)</h1>
+          <p class="section-desc">Your collected items and stuff</p>
+          <div id="inventoryGrid" class="inventory-grid">
+            <!-- Items will appear here -->
+          </div>
+          <div id="inventoryEmpty" class="empty-state">
+            <div class="empty-emoji">🎒</div>
+            <p>Your inventory is empty.</p>
+            <p class="empty-sub">Buy items from the Market to see them here!</p>
           </div>
         </section>
       </main>

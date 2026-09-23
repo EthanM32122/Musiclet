@@ -29,7 +29,6 @@ function showPage(pageId) {
   const page = document.getElementById(pageId);
   if (page) page.classList.add("active");
 
-  // Clear messages
   const regError = document.getElementById("regError");
   const regSuccess = document.getElementById("regSuccess");
   const loginError = document.getElementById("loginError");
@@ -47,21 +46,53 @@ function showPage(pageId) {
 
 // ========== SIDEBAR SECTIONS ==========
 function showSection(sectionId) {
-  // Hide all sections
   document.querySelectorAll(".content-section").forEach((s) => s.classList.remove("active"));
-  // Show selected
   const section = document.getElementById("section-" + sectionId);
   if (section) section.classList.add("active");
 
-  // Update nav active state
   document.querySelectorAll(".nav-item").forEach((item) => item.classList.remove("active"));
-  // Find and activate the clicked one
-  const items = document.querySelectorAll(".nav-item");
-  items.forEach((item) => {
+  document.querySelectorAll(".nav-item").forEach((item) => {
     if (item.getAttribute("onclick")?.includes(sectionId)) {
       item.classList.add("active");
     }
   });
+
+  // Refresh inventory when opening Musics
+  if (sectionId === "musics") {
+    renderInventory();
+  }
+}
+
+// ========== INVENTORY ==========
+function getInventory() {
+  const user = getCurrentUser();
+  if (!user) return [];
+  try {
+    return JSON.parse(localStorage.getItem("musiclet_inventory_" + user) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function renderInventory() {
+  const grid = document.getElementById("inventoryGrid");
+  const empty = document.getElementById("inventoryEmpty");
+  const items = getInventory();
+
+  if (!grid || !empty) return;
+
+  if (items.length === 0) {
+    grid.innerHTML = "";
+    empty.style.display = "block";
+  } else {
+    empty.style.display = "none";
+    grid.innerHTML = items.map(item => `
+      <div class="inventory-item">
+        <div class="item-emoji">${item.emoji}</div>
+        <div class="item-name">${item.name}</div>
+      </div>
+    `).join("");
+  }
 }
 
 // ========== PASSWORD TOGGLE ==========

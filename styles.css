@@ -500,107 +500,58 @@ body::after {
   font-weight: 600;
 }
 
-/* MARKET */
-.market-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-.market-item {
+/* EMPTY STATE */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
   background: white;
   border-radius: 16px;
-  padding: 24px;
-  text-align: center;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
 }
 
-.item-emoji {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-
-.item-name {
-  font-weight: 700;
-  font-size: 16px;
-  color: #37474f;
-  margin-bottom: 6px;
-}
-
-.item-price {
-  color: #00acc1;
-  font-weight: 600;
+.empty-emoji {
+  font-size: 64px;
   margin-bottom: 16px;
 }
 
-.btn-buy {
-  background: linear-gradient(180deg, #7e57c2, #5e35b1);
-  color: white;
-  border: none;
-  padding: 10px 24px;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
-  box-shadow: 0 3px 0 #4527a0;
-}
-
-.btn-buy:hover {
-  filter: brightness(1.1);
-}
-
-/* MUSICS */
-.musics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-
-.music-card {
-  background: white;
-  border-radius: 16px;
-  padding: 28px 20px;
-  text-align: center;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-  transition: transform 0.2s;
-}
-
-.music-card:hover {
-  transform: translateY(-4px);
-}
-
-.music-emoji {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-
-.music-name {
-  font-weight: 700;
+.empty-state p {
   font-size: 18px;
-  color: #1a237e;
+  color: #546e7a;
+  font-weight: 600;
   margin-bottom: 6px;
 }
 
-.music-desc {
-  color: #78909c;
-  font-size: 14px;
-  margin-bottom: 18px;
+.empty-sub {
+  font-size: 14px !important;
+  color: #90a4ae !important;
+  font-weight: 400 !important;
 }
 
-.btn-play {
-  background: linear-gradient(180deg, #26c6da, #00acc1);
-  color: white;
-  border: none;
-  padding: 10px 28px;
-  border-radius: 10px;
+/* INVENTORY */
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.inventory-item {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 2px solid #e0f7fa;
+}
+
+.inventory-item .item-emoji {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.inventory-item .item-name {
   font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
-  box-shadow: 0 3px 0 #00838f;
-}
-
-.btn-play:hover {
-  filter: brightness(1.1);
+  font-size: 15px;
+  color: #37474f;
 }
 
 /* ========== ANIMATIONS ========== */
