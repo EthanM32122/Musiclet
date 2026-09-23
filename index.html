@@ -7,181 +7,145 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- ========== LANDING PAGE ========== -->
-  <div id="landing" class="page active">
-    <div class="landing-content">
-      <div class="logo-area">
-        <div class="logo-box">
-          <div class="logo-m">M</div>
-          <div class="logo-text">Musiclet</div>
-        </div>
-        <h1 class="main-title">Musiclet</h1>
+  <!-- LANDING -->
+  <div id="landing" class="screen active">
+    <div class="landing-inner">
+      <div class="logo-box">
+        <div class="logo-m">M</div>
+        <div class="logo-text">Musiclet</div>
       </div>
-
-      <p class="tagline">
-        Musiclet inspired by<br />
-        Blooket and coded by<br />
-        and owned by Ethan32.
-      </p>
-
+      <h1 class="main-title">Musiclet</h1>
+      <p class="tagline">Blooket-inspired music quiz platform<br>Coded & owned by Ethan32</p>
       <div class="btn-row">
-        <button class="btn btn-login" onclick="showPage('login')">LOGIN!</button>
-        <button class="btn btn-register" onclick="showPage('register')">REGISTER</button>
+        <button class="btn btn-green" onclick="openLogin()">LOGIN!</button>
+        <button class="btn btn-purple" onclick="openRegister()">REGISTER</button>
       </div>
     </div>
   </div>
 
-  <!-- ========== REGISTER PAGE ========== -->
-  <div id="register" class="page">
-    <div class="form-card">
-      <h1 class="form-title register-title">Register</h1>
-      <p class="form-subtitle">Create your account to get started!</p>
-
-      <form id="registerForm" onsubmit="handleRegister(event)">
-        <label class="field-label">Username</label>
-        <div class="input-wrap">
-          <span class="input-icon">👤</span>
-          <input type="text" id="regUsername" placeholder="Enter your username" required autocomplete="username" />
+  <!-- APP (after login) -->
+  <div id="app" class="screen">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="logo-box mini">
+          <div class="logo-m">M</div>
         </div>
+        <span class="brand">Musiclet</span>
+      </div>
+      <div class="topbar-right">
+        <span class="token-pill">🪙 <span id="tokenCount">0</span></span>
+        <span class="user-pill" id="userDisplay">—</span>
+        <button class="btn btn-sm btn-ghost" onclick="logout()">Log out</button>
+      </div>
+    </header>
 
-        <label class="field-label">Password</label>
-        <div class="input-wrap">
-          <span class="input-icon">🔒</span>
-          <input type="password" id="regPassword" placeholder="Enter your password" required autocomplete="new-password" />
-          <button type="button" class="toggle-pw" onclick="togglePassword('regPassword', this)">👁</button>
+    <nav class="nav" id="nav">
+      <button class="nav-item active" data-page="stats" onclick="showPage('stats')">📊 Stats</button>
+      <button class="nav-item" data-page="market" onclick="showPage('market')">🛒 Market</button>
+      <button class="nav-item" data-page="blooks" onclick="showPage('blooks')">🎒 My Blooks</button>
+    </nav>
+
+    <main class="content">
+      <!-- STATS -->
+      <section id="page-stats" class="page active">
+        <div class="page-head">
+          <h1>Stats</h1>
+          <span class="muted">Your progress on Musiclet</span>
         </div>
+        <div class="stats-grid">
+          <div class="card stat-card">
+            <div class="stat-label">Tokens</div>
+            <div class="stat-value" id="statTokens">0</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Level</div>
+            <div class="stat-value" id="statLevel">1</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">XP</div>
+            <div class="stat-value" id="statXP">0</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Packs Opened</div>
+            <div class="stat-value" id="statPacks">0</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Blook Types</div>
+            <div class="stat-value" id="statBlooks">0</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Total Blooks</div>
+            <div class="stat-value" id="statTotal">0</div>
+          </div>
+        </div>
+        <div class="card claim-card">
+          <div>
+            <strong>Daily Claim</strong>
+            <p class="muted">Get free tokens every day</p>
+          </div>
+          <button class="btn btn-green" id="claimBtn" onclick="claimDaily()">Claim 4000 🪙</button>
+        </div>
+      </section>
 
-        <button type="submit" class="btn btn-register-submit">Register</button>
-      </form>
+      <!-- MARKET -->
+      <section id="page-market" class="page">
+        <div class="page-head">
+          <h1>Market</h1>
+          <span class="muted">Buy & open packs to collect Blooks</span>
+        </div>
+        <div class="pack-grid" id="packGrid"></div>
+      </section>
 
-      <p class="switch-link">
-        Already have an account? <a href="#" onclick="showPage('login'); return false;">Log in</a>
-      </p>
-      <p id="regError" class="error-msg"></p>
-      <p id="regSuccess" class="success-msg"></p>
+      <!-- BLOOKS -->
+      <section id="page-blooks" class="page">
+        <div class="page-head">
+          <h1>My Blooks</h1>
+          <span class="muted">Your collection</span>
+        </div>
+        <div class="rarity-bar" id="rarityBar"></div>
+        <div id="blooksByPack"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div class="modal-bg" id="loginModal">
+    <div class="modal">
+      <h2>Log In</h2>
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="Username" autocomplete="username" />
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password" />
+      <p class="error" id="loginErr"></p>
+      <button class="btn btn-green full" onclick="doLogin()">Log In</button>
+      <p class="switch">No account? <a href="#" onclick="closeModals(); openRegister(); return false;">Register</a></p>
     </div>
   </div>
 
-  <!-- ========== LOGIN PAGE ========== -->
-  <div id="login" class="page">
-    <div class="form-card">
-      <h1 class="form-title login-title">Log In</h1>
-
-      <form id="loginForm" onsubmit="handleLogin(event)">
-        <label class="field-label">Username</label>
-        <div class="input-wrap">
-          <span class="input-icon">👤</span>
-          <input type="text" id="loginUsername" placeholder="Enter username" required autocomplete="username" />
-        </div>
-
-        <label class="field-label">Password</label>
-        <div class="input-wrap">
-          <span class="input-icon">🔒</span>
-          <input type="password" id="loginPassword" placeholder="Enter password" required autocomplete="current-password" />
-          <button type="button" class="toggle-pw" onclick="togglePassword('loginPassword', this)">👁</button>
-        </div>
-
-        <button type="submit" class="btn btn-login-submit">Log In</button>
-      </form>
-
-      <p class="switch-link">
-        Don't have an account? <a href="#" onclick="showPage('register'); return false;">Register</a>
-      </p>
-      <p id="loginError" class="error-msg"></p>
+  <!-- REGISTER MODAL -->
+  <div class="modal-bg" id="regModal">
+    <div class="modal">
+      <h2>Register</h2>
+      <label>Username</label>
+      <input type="text" id="regUser" placeholder="3–20 characters" autocomplete="username" />
+      <label>Password</label>
+      <input type="password" id="regPass" placeholder="At least 4 characters" autocomplete="new-password" />
+      <label>Confirm Password</label>
+      <input type="password" id="regPass2" placeholder="Confirm password" autocomplete="new-password" />
+      <p class="error" id="regErr"></p>
+      <button class="btn btn-purple full" onclick="doRegister()">Create Account</button>
+      <p class="switch">Have an account? <a href="#" onclick="closeModals(); openLogin(); return false;">Log in</a></p>
     </div>
   </div>
 
-  <!-- ========== DASHBOARD (after login) ========== -->
-  <div id="dashboard" class="page">
-    <div class="app-layout">
-      <!-- LEFT NAVBAR -->
-      <nav class="sidebar">
-        <div class="sidebar-logo">
-          <div class="logo-box small">
-            <div class="logo-m">M</div>
-            <div class="logo-text">Musiclet</div>
-          </div>
-        </div>
-
-        <ul class="nav-menu">
-          <li class="nav-item active" onclick="showSection('stats')">
-            <span class="nav-icon">📊</span>
-            <span class="nav-label">Stats</span>
-          </li>
-          <li class="nav-item" onclick="showSection('market')">
-            <span class="nav-icon">🛒</span>
-            <span class="nav-label">Market</span>
-          </li>
-          <li class="nav-item" onclick="showSection('musics')">
-            <span class="nav-icon">🎒</span>
-            <span class="nav-label">Musics</span>
-          </li>
-        </ul>
-
-        <div class="sidebar-footer">
-          <p class="user-info">Logged in as<br><strong id="sideUsername"></strong></p>
-          <button class="btn btn-logout-small" onclick="handleLogout()">Log Out</button>
-        </div>
-      </nav>
-
-      <!-- MAIN CONTENT -->
-      <main class="main-content">
-        <!-- STATS SECTION -->
-        <section id="section-stats" class="content-section active">
-          <h1 class="section-title">📊 Stats</h1>
-          <p class="section-desc">Your Musiclet statistics</p>
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-value" id="statGames">0</div>
-              <div class="stat-label">Games Played</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value" id="statWins">0</div>
-              <div class="stat-label">Wins</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value" id="statCoins">500</div>
-              <div class="stat-label">Coins</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value" id="statLevel">1</div>
-              <div class="stat-label">Level</div>
-            </div>
-          </div>
-        </section>
-
-        <!-- MARKET SECTION -->
-        <section id="section-market" class="content-section">
-          <h1 class="section-title">🛒 Market</h1>
-          <p class="section-desc">Open packs to collect blooks!</p>
-          <div class="pack-grid" id="packGrid">
-            <!-- Packs rendered by JS -->
-          </div>
-        </section>
-
-        <!-- MUSICS = INVENTORY SECTION -->
-        <section id="section-musics" class="content-section">
-          <h1 class="section-title">🎒 Musics (Inventory)</h1>
-          <p class="section-desc">Your collected blooks</p>
-          <div id="inventoryGrid" class="inventory-grid"></div>
-          <div id="inventoryEmpty" class="empty-state">
-            <div class="empty-emoji">🎒</div>
-            <p>Your inventory is empty.</p>
-            <p class="empty-sub">Open packs from the Market to collect blooks!</p>
-          </div>
-        </section>
-      </main>
-    </div>
-  </div>
-
-  <!-- Pack Result Modal -->
-  <div id="packModal" class="modal hidden">
-    <div class="modal-content">
-      <img id="modalImg" class="modal-img" src="" alt="" />
-      <h2 id="modalTitle">You got...</h2>
-      <p id="modalItem" class="modal-item"></p>
-      <p id="modalRarity" class="modal-rarity"></p>
-      <button class="btn btn-modal" onclick="closeModal()">Awesome!</button>
+  <!-- OPEN PACK MODAL -->
+  <div class="modal-bg" id="openModal">
+    <div class="modal open-modal">
+      <h2>You got…</h2>
+      <img id="openImg" src="" alt="" class="open-img" />
+      <div class="open-name" id="openName">—</div>
+      <div class="open-rarity" id="openRarity">—</div>
+      <button class="btn btn-green full" onclick="closeOpen()">Nice!</button>
     </div>
   </div>
 
