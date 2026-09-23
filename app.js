@@ -1,272 +1,312 @@
-// ========== STORAGE HELPERS ==========
+const BLOOKS = CATALOG.blooks;
+const PACKS = CATALOG.packs;
+const RARITIES = CATALOG.rarities;
+const blookByName = Object.fromEntries(BLOOKS.map(b => [b.name, b]));
+
+let rarityFilter = "all";
+
+// ===== STORAGE =====
+function safeGet(k, f) {
+  try { return localStorage.getItem(k) || f; } catch (e) { return f; }
+}
+function safeSet(k, v) {
+  try { localStorage.setItem(k, v); return true; } catch (e) { return false; }
+}
 function getUsers() {
-  try {
-    return JSON.parse(localStorage.getItem("musiclet_users") || "{}");
-  } catch {
-    return {};
-  }
+  try { return JSON.parse(safeGet("ml_users", "{}")); } catch (e) { return {}; }
 }
-
-function saveUsers(users) {
-  localStorage.setItem("musiclet_users", JSON.stringify(users));
-}
-
-function getCurrentUser() {
-  return localStorage.getItem("musiclet_currentUser");
-}
-
-function setCurrentUser(username) {
-  if (username) {
-    localStorage.setItem("musiclet_currentUser", username);
-  } else {
-    localStorage.removeItem("musiclet_currentUser");
-  }
-}
-
-function getCoins() {
-  const user = getCurrentUser();
-  if (!user) return 0;
-  return parseInt(localStorage.getItem("musiclet_coins_" + user) || "500", 10);
-}
-
-function setCoins(amount) {
-  const user = getCurrentUser();
-  if (!user) return;
-  localStorage.setItem("musiclet_coins_" + user, amount);
-  const el = document.getElementById("statCoins");
-  if (el) el.textContent = amount;
-}
-
-// ========== PAGE NAVIGATION ==========
-function showPage(pageId) {
-  document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
-  const page = document.getElementById(pageId);
-  if (page) page.classList.add("active");
-
-  const regError = document.getElementById("regError");
-  const regSuccess = document.getElementById("regSuccess");
-  const loginError = document.getElementById("loginError");
-  if (regError) regError.textContent = "";
-  if (regSuccess) regSuccess.textContent = "";
-  if (loginError) loginError.textContent = "";
-
-  if (pageId === "register") document.getElementById("registerForm")?.reset();
-  if (pageId === "login") document.getElementById("loginForm")?.reset();
-}
-
-// ========== SIDEBAR SECTIONS ==========
-function showSection(sectionId) {
-  document.querySelectorAll(".content-section").forEach((s) => s.classList.remove("active"));
-  const section = document.getElementById("section-" + sectionId);
-  if (section) section.classList.add("active");
-
-  document.querySelectorAll(".nav-item").forEach((item) => item.classList.remove("active"));
-  document.querySelectorAll(".nav-item").forEach((item) => {
-    if (item.getAttribute("onclick")?.includes(sectionId)) {
-      item.classList.add("active");
-    }
-  });
-
-  if (sectionId === "market") renderPacks();
-  if (sectionId === "musics") renderInventory();
-  if (sectionId === "stats") {
-    const coinsEl = document.getElementById("statCoins");
-    if (coinsEl) coinsEl.textContent = getCoins();
-  }
-}
-
-// ========== RENDER PACKS ==========
-function renderPacks() {
-  const grid = document.getElementById("packGrid");
-  if (!grid || !window.CATALOG) return;
-
-  grid.innerHTML = CATALOG.packs.map(pack => `
-    <div class="pack-card" style="border-color: ${pack.color1}">
-      <img class="pack-img" src="${pack.img}" alt="${pack.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" />
-      <div class="pack-emoji-fallback" style="display:none">📦</div>
-      <div class="pack-name">${pack.name}</div>
-      <div class="pack-cost">${pack.price} coins</div>
-      <button class="btn btn-open" onclick="openPack('${pack.name}')">Open Pack</button>
-    </div>
-  `).join("");
-}
-
-// ========== INVENTORY ==========
-function getInventory() {
-  const user = getCurrentUser();
-  if (!user) return [];
-  try {
-    return JSON.parse(localStorage.getItem("musiclet_inventory_" + user) || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function saveInventory(items) {
-  const user = getCurrentUser();
-  if (!user) return;
-  localStorage.setItem("musiclet_inventory_" + user, JSON.stringify(items));
-}
-
-function renderInventory() {
-  const grid = document.getElementById("inventoryGrid");
-  const empty = document.getElementById("inventoryEmpty");
-  const items = getInventory();
-
-  if (!grid || !empty) return;
-
-  if (items.length === 0) {
-    grid.innerHTML = "";
-    empty.style.display = "block";
-  } else {
-    empty.style.display = "none";
-    grid.innerHTML = items.map(item => `
-      <div class="inventory-item">
-        <img class="inv-img" src="${item.img || ''}" alt="${item.name}" onerror="this.outerHTML='<div class=\'item-emoji\'>🎁</div>'" />
-        <div class="item-name">${item.name}</div>
-        <div class="item-pack">${item.pack || ''}</div>
-      </div>
-    `).join("");
-  }
-}
-
-// ========== PACK OPENING ==========
-function openPack(packName) {
-  const pack = CATALOG.packs.find(p => p.name === packName);
-  if (!pack) return;
-
-  const coins = getCoins();
-  if (coins < pack.price) {
-    alert("Not enough coins! You need " + pack.price + " coins.");
-    return;
-  }
-
-  setCoins(coins - pack.price);
-
-  // Pick random blook from pack
-  const blookName = pack.blooks[Math.floor(Math.random() * pack.blooks.length)];
-  const img = blookImg(blookName);
-
-  // Add to inventory
-  const inv = getInventory();
-  inv.push({
-    name: blookName,
-    pack: packName,
-    img: img,
-    time: Date.now()
-  });
-  saveInventory(inv);
-
-  // Show modal
-  document.getElementById("modalImg").src = img;
-  document.getElementById("modalImg").style.display = "block";
-  document.getElementById("modalTitle").textContent = "You opened " + packName + "!";
-  document.getElementById("modalItem").textContent = blookName;
-  document.getElementById("modalRarity").textContent = "";
-  document.getElementById("packModal").classList.remove("hidden");
-}
-
-function closeModal() {
-  document.getElementById("packModal").classList.add("hidden");
-}
-
-// ========== PASSWORD TOGGLE ==========
-function togglePassword(inputId, btn) {
-  const input = document.getElementById(inputId);
-  if (!input) return;
-  if (input.type === "password") {
-    input.type = "text";
-    btn.textContent = "🙈";
-  } else {
-    input.type = "password";
-    btn.textContent = "👁";
-  }
-}
-
-// ========== REGISTER ==========
-function handleRegister(e) {
-  e.preventDefault();
-  const username = document.getElementById("regUsername").value.trim();
-  const password = document.getElementById("regPassword").value;
-  const errorEl = document.getElementById("regError");
-  const successEl = document.getElementById("regSuccess");
-
-  errorEl.textContent = "";
-  successEl.textContent = "";
-
-  if (username.length < 3) {
-    errorEl.textContent = "Username must be at least 3 characters.";
-    return;
-  }
-  if (password.length < 4) {
-    errorEl.textContent = "Password must be at least 4 characters.";
-    return;
-  }
-
-  const users = getUsers();
-  if (users[username.toLowerCase()]) {
-    errorEl.textContent = "That username is already taken.";
-    return;
-  }
-
-  users[username.toLowerCase()] = {
-    username: username,
-    password: password,
-    created: Date.now(),
+function currentUser() { return safeGet("ml_current", ""); }
+function defaultData() {
+  return {
+    tokens: CATALOG.startTokens || 1500,
+    exp: 0,
+    packsOpened: 0,
+    inventory: {},
+    lastClaim: ""
   };
-  saveUsers(users);
-
-  localStorage.setItem("musiclet_coins_" + username, "500");
-
-  successEl.textContent = "Account created! Redirecting to login…";
-  setTimeout(() => {
-    showPage("login");
-    document.getElementById("loginUsername").value = username;
-  }, 1200);
+}
+function getData(u) {
+  try {
+    return Object.assign(defaultData(), JSON.parse(safeGet("ml_data_" + u, "{}")));
+  } catch (e) {
+    return defaultData();
+  }
+}
+function saveData(u, d) {
+  safeSet("ml_data_" + u, JSON.stringify(d));
 }
 
-// ========== LOGIN ==========
-function handleLogin(e) {
-  e.preventDefault();
-  const username = document.getElementById("loginUsername").value.trim();
-  const password = document.getElementById("loginPassword").value;
-  const errorEl = document.getElementById("loginError");
+function levelForExp(exp) {
+  return Math.floor(Math.sqrt(exp / 100)) + 1;
+}
 
-  errorEl.textContent = "";
+// ===== AUTH =====
+function openLogin() {
+  closeModals();
+  document.getElementById("loginModal").classList.add("open");
+  document.getElementById("loginErr").textContent = "";
+}
+function openRegister() {
+  closeModals();
+  document.getElementById("regModal").classList.add("open");
+  document.getElementById("regErr").textContent = "";
+}
+function closeModals() {
+  document.querySelectorAll(".modal-bg").forEach(m => m.classList.remove("open"));
+}
+function closeOpen() {
+  document.getElementById("openModal").classList.remove("open");
+}
 
-  const users = getUsers();
-  const user = users[username.toLowerCase()];
+function doRegister() {
+  const u = (document.getElementById("regUser").value || "").trim();
+  const p = document.getElementById("regPass").value || "";
+  const p2 = document.getElementById("regPass2").value || "";
+  const err = document.getElementById("regErr");
 
-  if (!user || user.password !== password) {
-    errorEl.textContent = "Invalid username or password.";
+  if (u.length < 3 || u.length > 20) {
+    err.textContent = "Username must be 3–20 characters";
     return;
   }
+  if (p.length < 4) {
+    err.textContent = "Password must be at least 4 characters";
+    return;
+  }
+  if (p !== p2) {
+    err.textContent = "Passwords do not match";
+    return;
+  }
+  const users = getUsers();
+  if (users[u.toLowerCase()]) {
+    err.textContent = "Username taken";
+    return;
+  }
+  users[u.toLowerCase()] = { username: u, password: p };
+  safeSet("ml_users", JSON.stringify(users));
+  saveData(u, defaultData());
+  err.textContent = "Account created! Signing in…";
+  setTimeout(() => {
+    closeModals();
+    safeSet("ml_current", u);
+    afterLogin(u);
+  }, 600);
+}
 
-  setCurrentUser(user.username);
-  document.getElementById("sideUsername").textContent = user.username;
+function doLogin() {
+  const u = (document.getElementById("loginUser").value || "").trim();
+  const p = document.getElementById("loginPass").value || "";
+  const err = document.getElementById("loginErr");
+  const users = getUsers();
+  const key = u.toLowerCase();
+  const user = users[key];
+  if (!user || user.password !== p) {
+    err.textContent = "Invalid username or password";
+    return;
+  }
+  safeSet("ml_current", user.username);
+  afterLogin(user.username);
+}
 
-  if (!localStorage.getItem("musiclet_coins_" + user.username)) {
-    localStorage.setItem("musiclet_coins_" + user.username, "500");
+function afterLogin(u) {
+  closeModals();
+  document.getElementById("landing").classList.remove("active");
+  document.getElementById("app").classList.add("active");
+  document.getElementById("userDisplay").textContent = u;
+  showPage("stats");
+  refreshUI();
+}
+
+function logout() {
+  safeSet("ml_current", "");
+  document.getElementById("app").classList.remove("active");
+  document.getElementById("landing").classList.add("active");
+}
+
+// ===== PAGES =====
+function showPage(page) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  const panel = document.getElementById("page-" + page);
+  if (panel) panel.classList.add("active");
+  const nav = document.querySelector('.nav-item[data-page="' + page + '"]');
+  if (nav) nav.classList.add("active");
+  refreshUI();
+}
+
+function refreshUI() {
+  const u = currentUser();
+  if (!u) return;
+  const d = getData(u);
+  document.getElementById("tokenCount").textContent = d.tokens.toLocaleString();
+  document.getElementById("statTokens").textContent = d.tokens.toLocaleString();
+  document.getElementById("statLevel").textContent = levelForExp(d.exp);
+  document.getElementById("statXP").textContent = d.exp.toLocaleString();
+  document.getElementById("statPacks").textContent = d.packsOpened || 0;
+
+  const inv = d.inventory || {};
+  const types = Object.keys(inv).filter(k => inv[k] > 0).length;
+  const total = Object.values(inv).reduce((a, b) => a + (b || 0), 0);
+  document.getElementById("statBlooks").textContent = types;
+  document.getElementById("statTotal").textContent = total;
+
+  const day = new Date().toDateString();
+  const claimBtn = document.getElementById("claimBtn");
+  if (claimBtn) {
+    if (d.lastClaim === day) {
+      claimBtn.disabled = true;
+      claimBtn.textContent = "Claimed today";
+      claimBtn.style.opacity = "0.6";
+    } else {
+      claimBtn.disabled = false;
+      claimBtn.textContent = "Claim " + (CATALOG.claimAmount || 4000) + " 🪙";
+      claimBtn.style.opacity = "1";
+    }
   }
 
-  showPage("dashboard");
-  showSection("stats");
+  renderMarket();
+  renderBlooks();
 }
 
-// ========== LOGOUT ==========
-function handleLogout() {
-  setCurrentUser(null);
-  showPage("landing");
+// ===== MARKET =====
+function renderMarket() {
+  const grid = document.getElementById("packGrid");
+  if (!grid) return;
+  grid.innerHTML = "";
+  PACKS.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "pack-card";
+    card.innerHTML =
+      '<img src="' + p.img + '" alt="' + p.name + '" onerror="this.style.background=\'' + p.color1 + '\'">' +
+      "<h3>" + p.name + "</h3>" +
+      '<div class="pack-price">' + p.price + " 🪙</div>";
+    card.onclick = () => openPack(p.name);
+    grid.appendChild(card);
+  });
 }
 
-// ========== INIT ==========
+function rollPack(packName) {
+  const entries = BLOOKS.filter(b => b.pack === packName);
+  if (!entries.length) return null;
+  const weights = entries.map(b => b.chance || 1);
+  const total = weights.reduce((a, b) => a + b, 0);
+  let r = Math.random() * total;
+  for (let i = 0; i < entries.length; i++) {
+    r -= weights[i];
+    if (r <= 0) return entries[i];
+  }
+  return entries[entries.length - 1];
+}
+
+function openPack(name) {
+  const u = currentUser();
+  if (!u) return;
+  const d = getData(u);
+  const pack = PACKS.find(p => p.name === name);
+  if (!pack) return;
+  if (d.tokens < pack.price) {
+    alert("Not enough tokens! Need " + pack.price + " 🪙");
+    return;
+  }
+  d.tokens -= pack.price;
+  d.packsOpened = (d.packsOpened || 0) + 1;
+  const blook = rollPack(name);
+  if (!blook) return;
+  d.inventory[blook.name] = (d.inventory[blook.name] || 0) + 1;
+  const rar = RARITIES[blook.rarity] || {};
+  d.exp += rar.exp || 5;
+  saveData(u, d);
+
+  document.getElementById("openImg").src = blook.img;
+  document.getElementById("openName").textContent = blook.name;
+  const col = rar.color || "#fff";
+  document.getElementById("openRarity").innerHTML =
+    '<span style="color:' + col + '">' + blook.rarity + " · " + (blook.chance || "?") + "%</span>";
+  document.getElementById("openModal").classList.add("open");
+  refreshUI();
+}
+
+// ===== BLOOKS =====
+function renderBlooks() {
+  const bar = document.getElementById("rarityBar");
+  if (bar && !bar.dataset.ready) {
+    bar.innerHTML = "";
+    ["all", ...Object.keys(RARITIES)].forEach(r => {
+      const b = document.createElement("button");
+      b.textContent = r === "all" ? "All" : r;
+      if (rarityFilter === r) b.classList.add("active");
+      b.onclick = () => {
+        rarityFilter = r;
+        bar.dataset.ready = "";
+        renderBlooks();
+      };
+      bar.appendChild(b);
+    });
+    bar.dataset.ready = "1";
+  }
+
+  const root = document.getElementById("blooksByPack");
+  if (!root) return;
+  root.innerHTML = "";
+  const d = getData(currentUser());
+
+  PACKS.forEach(pack => {
+    let blooks = BLOOKS.filter(b => b.pack === pack.name);
+    if (rarityFilter !== "all") blooks = blooks.filter(b => b.rarity === rarityFilter);
+    if (!blooks.length) return;
+
+    const sec = document.createElement("div");
+    sec.className = "pack-section";
+    sec.innerHTML = "<h3>" + pack.name + " Pack</h3>";
+    const grid = document.createElement("div");
+    grid.className = "blook-grid";
+
+    blooks.forEach(b => {
+      const qty = d.inventory[b.name] || 0;
+      const slot = document.createElement("div");
+      slot.className = "blook-slot " + (qty > 0 ? "owned" : "locked");
+      slot.title = b.name + (qty ? " ×" + qty : " (locked)");
+      if (qty > 0) {
+        slot.innerHTML =
+          '<img src="' + b.img + '" alt="' + b.name + '" loading="lazy" onerror="this.remove()">' +
+          '<span class="qty">' + qty + "</span>";
+      }
+      grid.appendChild(slot);
+    });
+    sec.appendChild(grid);
+    root.appendChild(sec);
+  });
+}
+
+// ===== DAILY CLAIM =====
+function claimDaily() {
+  const u = currentUser();
+  if (!u) return;
+  const d = getData(u);
+  const day = new Date().toDateString();
+  if (d.lastClaim === day) {
+    alert("Already claimed today!");
+    return;
+  }
+  const amount = CATALOG.claimAmount || 4000;
+  d.tokens += amount;
+  d.lastClaim = day;
+  saveData(u, d);
+  refreshUI();
+  alert("Claimed " + amount + " tokens!");
+}
+
+// ===== INIT =====
 document.addEventListener("DOMContentLoaded", () => {
-  const current = getCurrentUser();
-  if (current) {
-    document.getElementById("sideUsername").textContent = current;
-    showPage("dashboard");
-    showSection("stats");
+  const u = currentUser();
+  if (u) {
+    afterLogin(u);
   } else {
-    showPage("landing");
+    document.getElementById("landing").classList.add("active");
   }
+
+  document.querySelectorAll(".modal-bg").forEach(bg => {
+    bg.addEventListener("click", e => {
+      if (e.target === bg) closeModals();
+    });
+  });
 });
