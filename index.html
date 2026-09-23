@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Musiclet</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ========== LANDING PAGE ========== -->
+  <div id="landing" class="page active">
+    <div class="landing-content">
+      <div class="logo-area">
+        <div class="logo-box">
+          <div class="logo-m">M</div>
+          <div class="logo-text">Musiclet</div>
+        </div>
+        <h1 class="main-title">Musiclet</h1>
+      </div>
+
+      <p class="tagline">
+        Musiclet inspired by<br />
+        Blooket and coded by<br />
+        and owned by Ethan32.
+      </p>
+
+      <div class="btn-row">
+        <button class="btn btn-login" onclick="showPage('login')">LOGIN!</button>
+        <button class="btn btn-register" onclick="showPage('register')">REGISTER</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== REGISTER PAGE ========== -->
+  <div id="register" class="page">
+    <div class="form-card">
+      <h1 class="form-title register-title">Register</h1>
+      <p class="form-subtitle">Create your account to get started!</p>
+
+      <form id="registerForm" onsubmit="handleRegister(event)">
+        <label class="field-label">Username</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" id="regUsername" placeholder="Enter your username" required autocomplete="username" />
+        </div>
+
+        <label class="field-label">Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="regPassword" placeholder="Enter your password" required autocomplete="new-password" />
+          <button type="button" class="toggle-pw" onclick="togglePassword('regPassword', this)">👁</button>
+        </div>
+
+        <button type="submit" class="btn btn-register-submit">Register</button>
+      </form>
+
+      <p class="switch-link">
+        Already have an account? <a href="#" onclick="showPage('login'); return false;">Log in</a>
+      </p>
+      <p id="regError" class="error-msg"></p>
+      <p id="regSuccess" class="success-msg"></p>
+    </div>
+  </div>
+
+  <!-- ========== LOGIN PAGE ========== -->
+  <div id="login" class="page">
+    <div class="form-card">
+      <h1 class="form-title login-title">Log In</h1>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <label class="field-label">Username</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" id="loginUsername" placeholder="Enter username" required autocomplete="username" />
+        </div>
+
+        <label class="field-label">Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="loginPassword" placeholder="Enter password" required autocomplete="current-password" />
+          <button type="button" class="toggle-pw" onclick="togglePassword('loginPassword', this)">👁</button>
+        </div>
+
+        <button type="submit" class="btn btn-login-submit">Log In</button>
+      </form>
+
+      <p class="switch-link">
+        Don't have an account? <a href="#" onclick="showPage('register'); return false;">Register</a>
+      </p>
+      <p id="loginError" class="error-msg"></p>
+    </div>
+  </div>
+
+  <!-- ========== DASHBOARD (after login) ========== -->
+  <div id="dashboard" class="page">
+    <div class="dash-card">
+      <div class="logo-box small">
+        <div class="logo-m">M</div>
+        <div class="logo-text">Musiclet</div>
+      </div>
+      <h1>Welcome, <span id="dashUsername"></span>!</h1>
+      <p class="dash-sub">You're logged into Musiclet.</p>
+      <p class="dash-note">This is a Blooket-inspired music quiz platform.<br />More features coming soon!</p>
+      <button class="btn btn-logout" onclick="handleLogout()">Log Out</button>
+      <button class="btn btn-back" onclick="showPage('landing')">Back to Home</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
