@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- LANDING -->
   <div id="landing" class="screen active">
     <div class="landing-inner">
       <div class="logo-box">
@@ -23,7 +22,6 @@
     </div>
   </div>
 
-  <!-- APP (after login) -->
   <div id="app" class="screen">
     <header class="topbar">
       <div class="topbar-left">
@@ -38,6 +36,7 @@
           <img id="pfpImg" src="" alt="" style="display:none" />
           <span id="pfpLetter">?</span>
         </button>
+        <span class="user-badges" id="userBadges"></span>
         <button type="button" class="user-pill user-pill-btn" id="userDisplay" onclick="openProfile()" title="View stats">—</button>
         <button class="btn btn-sm btn-ghost" onclick="logout()">Log out</button>
       </div>
@@ -64,60 +63,30 @@
           </div>
         </div>
         <div class="stats-grid">
-          <div class="card stat-card">
-            <div class="stat-label">Tokens</div>
-            <div class="stat-value" id="statTokens">0</div>
-          </div>
-          <div class="card stat-card">
-            <div class="stat-label">Level</div>
-            <div class="stat-value" id="statLevel">1</div>
-          </div>
-          <div class="card stat-card">
-            <div class="stat-label">XP</div>
-            <div class="stat-value" id="statXP">0</div>
-          </div>
-          <div class="card stat-card">
-            <div class="stat-label">Packs Opened</div>
-            <div class="stat-value" id="statPacks">0</div>
-          </div>
-          <div class="card stat-card">
-            <div class="stat-label">Blook Types</div>
-            <div class="stat-value" id="statBlooks">0</div>
-          </div>
-          <div class="card stat-card">
-            <div class="stat-label">Total Blooks</div>
-            <div class="stat-value" id="statTotal">0</div>
-          </div>
+          <div class="card stat-card"><div class="stat-label">Tokens</div><div class="stat-value" id="statTokens">0</div></div>
+          <div class="card stat-card"><div class="stat-label">Level</div><div class="stat-value" id="statLevel">1</div></div>
+          <div class="card stat-card"><div class="stat-label">XP</div><div class="stat-value" id="statXP">0</div></div>
+          <div class="card stat-card"><div class="stat-label">Packs Opened</div><div class="stat-value" id="statPacks">0</div></div>
+          <div class="card stat-card"><div class="stat-label">Blook Types</div><div class="stat-value" id="statBlooks">0</div></div>
+          <div class="card stat-card"><div class="stat-label">Total Blooks</div><div class="stat-value" id="statTotal">0</div></div>
         </div>
         <div class="card claim-card">
-          <div>
-            <strong>Daily Claim</strong>
-            <p class="muted">Get free tokens every day</p>
-          </div>
+          <div><strong>Daily Claim</strong><p class="muted">Get free tokens every day</p></div>
           <button class="btn btn-green" id="claimBtn" onclick="claimDaily()">Claim 4000 🪙</button>
         </div>
       </section>
 
       <section id="page-market" class="page">
-        <div class="page-head">
-          <h1>Market</h1>
-          <span class="muted">Buy & open packs to collect Blooks</span>
-        </div>
+        <div class="page-head"><h1>Market</h1><span class="muted">Buy & open packs to collect Blooks</span></div>
         <div class="auto-bar card" id="autoBar">
-          <div class="auto-info">
-            <strong>⚡ Auto Open</strong>
-            <span class="muted" id="autoStatus">Click Auto on a pack to open continuously</span>
-          </div>
+          <div class="auto-info"><strong>⚡ Auto Open</strong><span class="muted" id="autoStatus">Click Auto on a pack to open continuously</span></div>
           <button class="btn btn-sm btn-stop" id="autoStopBtn" onclick="stopAuto()" style="display:none">⏹ Stop</button>
         </div>
         <div class="pack-grid" id="packGrid"></div>
       </section>
 
       <section id="page-bazaar" class="page">
-        <div class="page-head">
-          <h1>Bazaar</h1>
-          <span class="muted">Buy Blooks listed by other players</span>
-        </div>
+        <div class="page-head"><h1>Bazaar</h1><span class="muted">Buy Blooks listed by other players</span></div>
         <div class="bazaar-controls card">
           <input type="text" id="bazaarSearch" class="settings-input" placeholder="Search blook name…" oninput="renderBazaar()" />
           <div class="rarity-bar" id="bazaarPackBar"></div>
@@ -126,19 +95,13 @@
       </section>
 
       <section id="page-blooks" class="page">
-        <div class="page-head">
-          <h1>My Blooks</h1>
-          <span class="muted">Click a Blook to sell or list on the Bazaar</span>
-        </div>
+        <div class="page-head"><h1>My Blooks</h1><span class="muted">Click a Blook to sell or list on the Bazaar</span></div>
         <div class="rarity-bar" id="rarityBar"></div>
         <div id="blooksByPack"></div>
       </section>
 
       <section id="page-settings" class="page">
-        <div class="page-head">
-          <h1>Settings</h1>
-          <span class="muted">Manage your account</span>
-        </div>
+        <div class="page-head"><h1>Settings</h1><span class="muted">Manage your account</span></div>
         <div class="settings-stack">
           <div class="card settings-card">
             <h3>🪙 Token Trade</h3>
@@ -191,10 +154,8 @@
   <div class="modal-bg" id="loginModal">
     <div class="modal">
       <h2>Log In</h2>
-      <label>Username</label>
-      <input type="text" id="loginUser" placeholder="Username" autocomplete="username" />
-      <label>Password</label>
-      <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password" />
+      <label>Username</label><input type="text" id="loginUser" placeholder="Username" autocomplete="username" />
+      <label>Password</label><input type="password" id="loginPass" placeholder="Password" autocomplete="current-password" />
       <p class="error" id="loginErr"></p>
       <button class="btn btn-green full" onclick="doLogin()">Log In</button>
       <p class="switch">No account? <a href="#" onclick="closeModals(); openRegister(); return false;">Register</a></p>
@@ -204,12 +165,9 @@
   <div class="modal-bg" id="regModal">
     <div class="modal">
       <h2>Register</h2>
-      <label>Username</label>
-      <input type="text" id="regUser" placeholder="3–20 characters" autocomplete="username" />
-      <label>Password</label>
-      <input type="password" id="regPass" placeholder="At least 4 characters" autocomplete="new-password" />
-      <label>Confirm Password</label>
-      <input type="password" id="regPass2" placeholder="Confirm password" autocomplete="new-password" />
+      <label>Username</label><input type="text" id="regUser" placeholder="3–20 characters" autocomplete="username" />
+      <label>Password</label><input type="password" id="regPass" placeholder="At least 4 characters" autocomplete="new-password" />
+      <label>Confirm Password</label><input type="password" id="regPass2" placeholder="Confirm password" autocomplete="new-password" />
       <p class="error" id="regErr"></p>
       <button class="btn btn-purple full" onclick="doRegister()">Create Account</button>
       <p class="switch">Have an account? <a href="#" onclick="closeModals(); openLogin(); return false;">Log in</a></p>
@@ -260,6 +218,7 @@
         <div>
           <h2 id="profileName">—</h2>
           <p class="muted" id="profileSubtitle">Level 1</p>
+          <div class="profile-badges" id="profileBadges"></div>
         </div>
       </div>
       <h3 class="profile-section-title">Stats</h3>
