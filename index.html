@@ -108,7 +108,7 @@
       <section id="page-blooks" class="page">
         <div class="page-head">
           <h1>My Blooks</h1>
-          <span class="muted">Your collection</span>
+          <span class="muted">Your collection — click owned Blooks to sell</span>
         </div>
         <div class="rarity-bar" id="rarityBar"></div>
         <div id="blooksByPack"></div>
@@ -122,6 +122,20 @@
         </div>
 
         <div class="settings-stack">
+          <!-- Token Trade -->
+          <div class="card settings-card">
+            <h3>🪙 Token Trade</h3>
+            <p class="muted settings-desc">Send tokens to another Musiclet player (same device / browser)</p>
+            <label class="settings-label">Their username</label>
+            <input type="text" id="tradeUser" placeholder="Username to send to" class="settings-input" />
+            <label class="settings-label">Amount</label>
+            <input type="number" id="tradeAmount" placeholder="Tokens to send" min="1" class="settings-input" />
+            <label class="settings-label">Your password</label>
+            <input type="password" id="tradePass" placeholder="Confirm with password" class="settings-input" />
+            <p class="settings-msg" id="tradeMsg"></p>
+            <button class="btn btn-green btn-sm" onclick="sendTokens()">Send Tokens</button>
+          </div>
+
           <!-- Change Username -->
           <div class="card settings-card">
             <h3>Change Username</h3>
