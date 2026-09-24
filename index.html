@@ -42,6 +42,7 @@
     <nav class="nav" id="nav">
       <button class="nav-item active" data-page="stats" onclick="showPage('stats')">📊 Stats</button>
       <button class="nav-item" data-page="market" onclick="showPage('market')">🛒 Market</button>
+      <button class="nav-item" data-page="bazaar" onclick="showPage('bazaar')">🏛 Bazaar</button>
       <button class="nav-item" data-page="blooks" onclick="showPage('blooks')">🎒 My Blooks</button>
       <button class="nav-item" data-page="settings" onclick="showPage('settings')">⚙ Settings</button>
     </nav>
@@ -104,11 +105,24 @@
         <div class="pack-grid" id="packGrid"></div>
       </section>
 
+      <!-- BAZAAR -->
+      <section id="page-bazaar" class="page">
+        <div class="page-head">
+          <h1>Bazaar</h1>
+          <span class="muted">Buy Blooks listed by other players</span>
+        </div>
+        <div class="bazaar-controls card">
+          <input type="text" id="bazaarSearch" class="settings-input" placeholder="Search blook name…" oninput="renderBazaar()" />
+          <div class="rarity-bar" id="bazaarPackBar"></div>
+        </div>
+        <div id="bazaarList" class="bazaar-list"></div>
+      </section>
+
       <!-- BLOOKS -->
       <section id="page-blooks" class="page">
         <div class="page-head">
           <h1>My Blooks</h1>
-          <span class="muted">Your collection — click owned Blooks to sell</span>
+          <span class="muted">Click a Blook to sell or list on the Bazaar</span>
         </div>
         <div class="rarity-bar" id="rarityBar"></div>
         <div id="blooksByPack"></div>
@@ -122,7 +136,6 @@
         </div>
 
         <div class="settings-stack">
-          <!-- Token Trade -->
           <div class="card settings-card">
             <h3>🪙 Token Trade</h3>
             <p class="muted settings-desc">Send tokens to another Musiclet player (same device / browser)</p>
@@ -136,7 +149,6 @@
             <button class="btn btn-green btn-sm" onclick="sendTokens()">Send Tokens</button>
           </div>
 
-          <!-- Change Username -->
           <div class="card settings-card">
             <h3>Change Username</h3>
             <p class="muted settings-desc">Your current username: <strong id="settingsCurrentUser">—</strong></p>
@@ -148,7 +160,6 @@
             <button class="btn btn-green btn-sm" onclick="changeUsername()">Update Username</button>
           </div>
 
-          <!-- Change Password -->
           <div class="card settings-card">
             <h3>Change Password</h3>
             <label class="settings-label">Current password</label>
@@ -161,7 +172,6 @@
             <button class="btn btn-green btn-sm" onclick="changePassword()">Update Password</button>
           </div>
 
-          <!-- Delete Account -->
           <div class="card settings-card settings-danger">
             <h3>Delete Account</h3>
             <p class="muted settings-desc">This permanently deletes your account, tokens, and all Blooks. This cannot be undone.</p>
@@ -216,6 +226,33 @@
       <div class="open-rarity" id="openRarity">—</div>
       <div class="open-auto-count muted" id="openAutoCount" style="display:none"></div>
       <button class="btn btn-green full" id="openOkBtn" onclick="closeOpen()">Nice!</button>
+    </div>
+  </div>
+
+  <!-- BLOOK ACTION MODAL (sell or list) -->
+  <div class="modal-bg" id="blookActionModal">
+    <div class="modal">
+      <h2 id="baTitle">Blook</h2>
+      <img id="baImg" src="" alt="" class="open-img" />
+      <div class="open-name" id="baName">—</div>
+      <div class="muted" id="baInfo" style="text-align:center;margin-bottom:12px"></div>
+
+      <div class="ba-section">
+        <strong>Instant sell</strong>
+        <p class="muted" style="margin:6px 0 10px">Sell back to the game for a fixed price</p>
+        <button class="btn btn-sm btn-green full" id="baSellBtn" onclick="confirmInstantSell()">Sell for 0 🪙</button>
+      </div>
+
+      <div class="ba-section" style="margin-top:18px">
+        <strong>List on Bazaar</strong>
+        <p class="muted" style="margin:6px 0 8px">Set your own price for other players</p>
+        <label class="settings-label">Your price (tokens)</label>
+        <input type="number" id="baListPrice" class="settings-input" min="1" placeholder="Price" />
+        <p class="settings-msg" id="baListMsg"></p>
+        <button class="btn btn-sm btn-purple full" onclick="confirmListBazaar()">List on Bazaar</button>
+      </div>
+
+      <button class="btn btn-sm btn-ghost full" style="margin-top:14px" onclick="closeBlookAction()">Cancel</button>
     </div>
   </div>
 
