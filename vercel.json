@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/owner", "destination": "/owner.html" }
+    { "source": "/co-owner", "destination": "/co-owner.html" },
+    { "source": "/owner", "destination": "/co-owner.html" }
   ]
 }
