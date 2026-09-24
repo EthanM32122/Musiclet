@@ -12,11 +12,42 @@
   --teal: #0288d1;
   --gold: #f9a825;
 }
-body { font-family: "Segoe UI", system-ui, sans-serif; background: #7ec8e3; color: var(--text); min-height: 100vh; }
-#landing, #app {
-  background: repeating-conic-gradient(from 0deg, #7ec8e3 0deg 90deg, #a8d8ea 90deg 180deg);
-  background-size: 48px 48px;
+/* === Animated falling squares background === */
+html { background: #6b2fc9; }
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: #6b2fc9;
+  color: var(--text);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
 }
+#fallingBg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: #6b2fc9;
+}
+#fallingBg .sq {
+  position: absolute;
+  top: -120px;
+  border-radius: 18%;
+  animation-name: musicletFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+@keyframes musicletFall {
+  from { transform: translateY(0) rotate(var(--rot, 0deg)); }
+  to { transform: translateY(calc(100vh + 160px)) rotate(var(--rot, 0deg)); }
+}
+#landing, #app {
+  background: transparent !important;
+}
+.main-title { color: #fff !important; text-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+.tagline { color: rgba(255,255,255,0.92) !important; text-shadow: 0 1px 8px rgba(0,0,0,0.2); }
 .screen { display: none; min-height: 100vh; }
 .screen.active { display: flex; flex-direction: column; }
 .landing-inner { margin: auto; text-align: center; padding: 32px 20px; }
