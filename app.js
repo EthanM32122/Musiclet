@@ -14,11 +14,13 @@ const SELL_PRICES = {
 };
 
 let rarityFilter = "all";
+let bazaarPackFilter = "all";
 let autoRunning = false;
 let autoPack = null;
 let autoOpened = 0;
 let autoTimer = null;
 const AUTO_DELAY_MS = 900;
+let actionBlook = null; // currently selected blook for sell/list modal
 
 // ===== STORAGE =====
 function safeGet(k, f) {
@@ -54,6 +56,13 @@ function saveData(u, d) {
   safeSet("ml_data_" + u, JSON.stringify(d));
 }
 
+function getListings() {
+  try { return JSON.parse(safeGet("ml_bazaar", "[]")); } catch (e) { return []; }
+}
+function saveListings(list) {
+  safeSet("ml_bazaar", JSON.stringify(list));
+}
+
 function levelForExp(exp) {
   return Math.floor(Math.sqrt(exp / 100)) + 1;
 }
@@ -81,6 +90,10 @@ function closeModals() {
 function closeOpen() {
   if (autoRunning) return;
   document.getElementById("openModal").classList.remove("open");
+}
+function closeBlookAction() {
+  document.getElementById("blookActionModal").classList.remove("open");
+  actionBlook = null;
 }
 
 function doRegister() {
@@ -195,6 +208,7 @@ function refreshUI() {
 
   renderMarket();
   renderBlooks();
+  renderBazaar();
   updateAutoBar();
 }
 
@@ -298,6 +312,13 @@ function changeUsername() {
   saveData(newName, data);
   safeSet("ml_current", newName);
 
+  // Update seller name on any of their bazaar listings
+  const listings = getListings();
+  listings.forEach(L => {
+    if (L.seller.toLowerCase() === u.toLowerCase()) L.seller = newName;
+  });
+  saveListings(listings);
+
   document.getElementById("userDisplay").textContent = newName;
   document.getElementById("newUsername").value = "";
   document.getElementById("usernamePass").value = "";
@@ -360,6 +381,10 @@ function deleteAccount() {
   if (!confirm("Really delete your account forever? All tokens and Blooks will be lost.")) {
     return;
   }
+
+  // Remove their bazaar listings and return blooks? Just drop listings.
+  const listings = getListings().filter(L => L.seller.toLowerCase() !== u.toLowerCase());
+  saveListings(listings);
 
   delete users[key];
   safeSet("ml_users", JSON.stringify(users));
@@ -526,29 +551,241 @@ function updateAutoBar() {
   }
 }
 
-// ===== BLOOKS + SELL =====
-function sellBlook(name) {
+// ===== BLOOK ACTION (sell / list) =====
+function openBlookAction(name) {
   const u = currentUser();
   if (!u) return;
   const d = getData(u);
-  const qty = d.inventory[name] || 0;
-  if (qty < 1) return;
+  if ((d.inventory[name] || 0) < 1) return;
 
-  const price = sellPrice(name);
   const b = blookByName[name];
-  const rarity = b ? b.rarity : "?";
+  if (!b) return;
+  actionBlook = name;
 
-  if (!confirm("Sell 1× " + name + " (" + rarity + ") for " + price + " 🪙?")) {
+  document.getElementById("baTitle").textContent = "Manage Blook";
+  document.getElementById("baImg").src = b.img;
+  document.getElementById("baName").textContent = b.name;
+  document.getElementById("baInfo").textContent =
+    b.rarity + " · " + b.pack + " · You own ×" + d.inventory[name];
+  document.getElementById("baSellBtn").textContent =
+    "Sell for " + sellPrice(name) + " 🪙";
+  document.getElementById("baListPrice").value = "";
+  document.getElementById("baListMsg").textContent = "";
+  document.getElementById("blookActionModal").classList.add("open");
+}
+
+function confirmInstantSell() {
+  if (!actionBlook) return;
+  const name = actionBlook;
+  const u = currentUser();
+  const d = getData(u);
+  if ((d.inventory[name] || 0) < 1) {
+    closeBlookAction();
     return;
   }
-
-  d.inventory[name] = qty - 1;
+  const price = sellPrice(name);
+  d.inventory[name] -= 1;
   if (d.inventory[name] <= 0) delete d.inventory[name];
   d.tokens += price;
   saveData(u, d);
+  closeBlookAction();
   refreshUI();
 }
 
+function confirmListBazaar() {
+  if (!actionBlook) return;
+  const name = actionBlook;
+  const u = currentUser();
+  const d = getData(u);
+  if ((d.inventory[name] || 0) < 1) {
+    setMsg("baListMsg", "You don't own this blook", false);
+    return;
+  }
+  const price = Math.floor(Number(document.getElementById("baListPrice").value) || 0);
+  if (price < 1) {
+    setMsg("baListMsg", "Price must be at least 1", false);
+    return;
+  }
+
+  // Remove from inventory and put on bazaar
+  d.inventory[name] -= 1;
+  if (d.inventory[name] <= 0) delete d.inventory[name];
+  saveData(u, d);
+
+  const b = blookByName[name];
+  const listings = getListings();
+  listings.push({
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+    seller: u,
+    blook: name,
+    pack: b ? b.pack : "",
+    rarity: b ? b.rarity : "",
+    img: b ? b.img : "",
+    price: price,
+    at: Date.now()
+  });
+  saveListings(listings);
+
+  closeBlookAction();
+  refreshUI();
+  alert("Listed " + name + " on the Bazaar for " + price + " 🪙");
+}
+
+// ===== BAZAAR =====
+function renderBazaar() {
+  const root = document.getElementById("bazaarList");
+  if (!root) return;
+
+  // Pack filter bar
+  const bar = document.getElementById("bazaarPackBar");
+  if (bar && !bar.dataset.ready) {
+    bar.innerHTML = "";
+    ["all", ...PACKS.map(p => p.name)].forEach(p => {
+      const btn = document.createElement("button");
+      btn.textContent = p === "all" ? "All Packs" : p;
+      if (bazaarPackFilter === p) btn.classList.add("active");
+      btn.onclick = () => {
+        bazaarPackFilter = p;
+        bar.dataset.ready = "";
+        renderBazaar();
+      };
+      bar.appendChild(btn);
+    });
+    bar.dataset.ready = "1";
+  } else if (bar) {
+    bar.querySelectorAll("button").forEach(btn => {
+      const label = btn.textContent === "All Packs" ? "all" : btn.textContent;
+      btn.classList.toggle("active", label === bazaarPackFilter);
+    });
+  }
+
+  const search = ((document.getElementById("bazaarSearch") || {}).value || "").trim().toLowerCase();
+  const u = currentUser();
+  let listings = getListings();
+
+  if (bazaarPackFilter !== "all") {
+    listings = listings.filter(L => L.pack === bazaarPackFilter);
+  }
+  if (search) {
+    listings = listings.filter(L =>
+      L.blook.toLowerCase().includes(search) ||
+      (L.seller || "").toLowerCase().includes(search) ||
+      (L.rarity || "").toLowerCase().includes(search)
+    );
+  }
+
+  // Sort: cheapest first, then newest
+  listings.sort((a, b) => a.price - b.price || b.at - a.at);
+
+  root.innerHTML = "";
+  if (!listings.length) {
+    root.innerHTML = '<p class="muted" style="padding:20px 0">No listings yet. List a Blook from My Blooks!</p>';
+    return;
+  }
+
+  // Group by pack for display
+  const byPack = {};
+  listings.forEach(L => {
+    const pk = L.pack || "Other";
+    if (!byPack[pk]) byPack[pk] = [];
+    byPack[pk].push(L);
+  });
+
+  Object.keys(byPack).forEach(packName => {
+    const sec = document.createElement("div");
+    sec.className = "pack-section";
+    sec.innerHTML = "<h3>" + packName + "</h3>";
+    const grid = document.createElement("div");
+    grid.className = "bazaar-grid";
+
+    byPack[packName].forEach(L => {
+      const card = document.createElement("div");
+      card.className = "bazaar-card";
+      const isMine = u && L.seller.toLowerCase() === u.toLowerCase();
+      card.innerHTML =
+        '<img src="' + (L.img || "") + '" alt="" onerror="this.style.opacity=0.3">' +
+        '<div class="bz-name">' + L.blook + "</div>" +
+        '<div class="bz-rarity">' + (L.rarity || "") + "</div>" +
+        '<div class="bz-price">' + L.price.toLocaleString() + " 🪙</div>" +
+        '<div class="bz-seller muted">by ' + L.seller + "</div>" +
+        (isMine
+          ? '<button class="btn-pack btn-stop" data-id="' + L.id + '">Cancel</button>'
+          : '<button class="btn-pack btn-open-1" data-id="' + L.id + '">Buy</button>');
+
+      const btn = card.querySelector("button");
+      if (isMine) {
+        btn.onclick = () => cancelListing(L.id);
+      } else {
+        btn.onclick = () => buyListing(L.id);
+      }
+      grid.appendChild(card);
+    });
+    sec.appendChild(grid);
+    root.appendChild(sec);
+  });
+}
+
+function buyListing(id) {
+  const u = currentUser();
+  if (!u) return;
+  const listings = getListings();
+  const idx = listings.findIndex(L => L.id === id);
+  if (idx < 0) {
+    alert("Listing gone");
+    renderBazaar();
+    return;
+  }
+  const L = listings[idx];
+  if (L.seller.toLowerCase() === u.toLowerCase()) {
+    alert("That's your listing");
+    return;
+  }
+
+  const buyer = getData(u);
+  if (buyer.tokens < L.price) {
+    alert("Not enough tokens! Need " + L.price + " 🪙");
+    return;
+  }
+
+  if (!confirm("Buy " + L.blook + " from " + L.seller + " for " + L.price + " 🪙?")) {
+    return;
+  }
+
+  // Pay seller
+  buyer.tokens -= L.price;
+  buyer.inventory[L.blook] = (buyer.inventory[L.blook] || 0) + 1;
+  saveData(u, buyer);
+
+  const sellerData = getData(L.seller);
+  sellerData.tokens += L.price;
+  saveData(L.seller, sellerData);
+
+  listings.splice(idx, 1);
+  saveListings(listings);
+  refreshUI();
+  alert("Bought " + L.blook + "!");
+}
+
+function cancelListing(id) {
+  const u = currentUser();
+  if (!u) return;
+  const listings = getListings();
+  const idx = listings.findIndex(L => L.id === id);
+  if (idx < 0) return;
+  const L = listings[idx];
+  if (L.seller.toLowerCase() !== u.toLowerCase()) return;
+
+  if (!confirm("Cancel listing and return " + L.blook + " to your inventory?")) return;
+
+  const d = getData(u);
+  d.inventory[L.blook] = (d.inventory[L.blook] || 0) + 1;
+  saveData(u, d);
+  listings.splice(idx, 1);
+  saveListings(listings);
+  refreshUI();
+}
+
+// ===== BLOOKS =====
 function renderBlooks() {
   const bar = document.getElementById("rarityBar");
   if (bar && !bar.dataset.ready) {
@@ -589,15 +826,15 @@ function renderBlooks() {
       const slot = document.createElement("div");
       slot.className = "blook-slot " + (qty > 0 ? "owned sellable" : "locked");
       slot.title = qty > 0
-        ? b.name + " ×" + qty + " — click to sell for " + price + " 🪙"
+        ? b.name + " ×" + qty + " — click to sell or list"
         : b.name + " (locked)";
 
       if (qty > 0) {
         slot.innerHTML =
           '<img src="' + b.img + '" alt="' + b.name + '" loading="lazy" onerror="this.remove()">' +
           '<span class="qty">' + qty + "</span>" +
-          '<span class="sell-tag">' + price + " 🪙</span>";
-        slot.onclick = () => sellBlook(b.name);
+          '<span class="sell-tag">' + price + "+</span>";
+        slot.onclick = () => openBlookAction(b.name);
       }
       grid.appendChild(slot);
     });
