@@ -2,5 +2,13 @@
   "rewrites": [
     { "source": "/owner", "destination": "/owner.html" },
     { "source": "/co-owner", "destination": "/co-owner.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(owner|co-owner).html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    }
   ]
 }
