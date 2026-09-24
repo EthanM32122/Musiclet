@@ -415,6 +415,16 @@ body {
 .blook-slot.locked { opacity: 0.35; filter: grayscale(1); }
 .blook-slot.owned { opacity: 1; }
 
+.blook-slot.sellable {
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+}
+.blook-slot.sellable:hover {
+  transform: scale(1.06);
+  border-color: rgba(249, 168, 37, 0.6);
+  box-shadow: 0 4px 14px rgba(249, 168, 37, 0.25);
+}
+
 .blook-slot img {
   width: 85%;
   height: 85%;
@@ -431,6 +441,24 @@ body {
   padding: 1px 6px;
   border-radius: 6px;
   color: #ffd54f;
+}
+
+.blook-slot .sell-tag {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  background: rgba(230, 81, 0, 0.9);
+  color: #fff;
+  padding: 1px 5px;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+}
+.blook-slot.sellable:hover .sell-tag {
+  opacity: 1;
 }
 
 /* Settings */
