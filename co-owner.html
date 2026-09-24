@@ -20,12 +20,13 @@
     .owner-msg.err { color: #c62828; }
     .user-list { max-height: 160px; overflow-y: auto; margin-top: 8px; font-size: 13px; }
     .user-list div { padding: 4px 0; border-bottom: 1px solid rgba(0,80,140,0.08); }
+    .badge { display: inline-block; background: #7e57c2; color: #fff; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; margin-left: 8px; vertical-align: middle; }
   </style>
 </head>
 <body>
-  <div id="landing" class="screen active" style="display:block;min-height:100vh">
+  <div style="min-height:100vh">
     <div class="owner-wrap">
-      <h1>Co-owner Panel</h1>
+      <h1>Co-owner Panel <span class="badge">CO-OWNER</span></h1>
       <p class="muted" style="margin-bottom:20px">Restricted — enter the co-owner code</p>
 
       <div class="card owner-gate show" id="gate">
@@ -87,7 +88,8 @@
   <script src="catalog.js"></script>
   <script>
 (function () {
-  var OWNER_CODE = "122300318mmoopp";
+  var PANEL_CODE = "122300318mmoopp";
+  var SESSION_KEY = "ml_coowner";
 
   function safeGet(k, f) {
     try { return localStorage.getItem(k) || f; } catch (e) { return f; }
@@ -101,22 +103,15 @@
   function defaultData() {
     return {
       tokens: (typeof CATALOG !== "undefined" && CATALOG.startTokens) || 1500,
-      exp: 0,
-      packsOpened: 0,
-      inventory: {},
-      lastClaim: ""
+      exp: 0, packsOpened: 0, inventory: {}, lastClaim: ""
     };
   }
   function getData(u) {
     try {
       return Object.assign(defaultData(), JSON.parse(safeGet("ml_data_" + u, "{}")));
-    } catch (e) {
-      return defaultData();
-    }
+    } catch (e) { return defaultData(); }
   }
-  function saveData(u, d) {
-    safeSet("ml_data_" + u, JSON.stringify(d));
-  }
+  function saveData(u, d) { safeSet("ml_data_" + u, JSON.stringify(d)); }
   function resolveUser(name) {
     var users = getUsers();
     var u = users[(name || "").trim().toLowerCase()];
@@ -128,7 +123,6 @@
     el.textContent = text || "";
     el.className = "owner-msg " + (ok ? "ok" : "err");
   }
-
   function showPanel() {
     var gate = document.getElementById("gate");
     var panel = document.getElementById("panel");
@@ -137,48 +131,40 @@
     refreshUsers();
     fillBlookList();
   }
-
   function tryUnlock() {
     var input = document.getElementById("ownerCode");
     var code = (input && input.value ? input.value : "").trim();
-    if (code !== OWNER_CODE) {
+    if (code !== PANEL_CODE) {
       setMsg("gateMsg", "Wrong code", false);
       return;
     }
-    try { sessionStorage.setItem("ml_coowner", "1"); } catch (e) {}
+    try { sessionStorage.setItem(SESSION_KEY, "1"); } catch (e) {}
     setMsg("gateMsg", "Unlocked", true);
     showPanel();
   }
-
   function fillBlookList() {
     var dl = document.getElementById("blookList");
-    if (!dl) return;
-    if (typeof CATALOG === "undefined" || !CATALOG.blooks) return;
+    if (!dl || typeof CATALOG === "undefined" || !CATALOG.blooks) return;
     dl.innerHTML = CATALOG.blooks.map(function (b) {
       return "<option value=\"" + String(b.name).replace(/\"/g, "") + "\"></option>";
     }).join("");
   }
-
   function refreshUsers() {
     var el = document.getElementById("userList");
     if (!el) return;
     var users = getUsers();
-    var names = Object.keys(users).map(function (k) {
-      return users[k].username;
-    }).sort(function (a, b) { return a.localeCompare(b); });
+    var names = Object.keys(users).map(function (k) { return users[k].username; })
+      .sort(function (a, b) { return a.localeCompare(b); });
     if (!names.length) {
       el.textContent = "No users yet (accounts are per-browser)";
       return;
     }
     el.innerHTML = names.map(function (n) {
       var d = getData(n);
-      var types = Object.keys(d.inventory || {}).filter(function (k) {
-        return d.inventory[k] > 0;
-      }).length;
+      var types = Object.keys(d.inventory || {}).filter(function (k) { return d.inventory[k] > 0; }).length;
       return "<div><strong>" + n + "</strong> — " + d.tokens.toLocaleString() + " 🪙 · " + types + " types</div>";
     }).join("");
   }
-
   function adminTokens(sign) {
     var name = resolveUser(document.getElementById("tokUser").value);
     var amount = Math.floor(Number(document.getElementById("tokAmount").value) || 0);
@@ -196,7 +182,6 @@
     }
     refreshUsers();
   }
-
   function adminBlook(sign) {
     var name = resolveUser(document.getElementById("blUser").value);
     var blook = (document.getElementById("blName").value || "").trim();
@@ -221,45 +206,28 @@
     }
     refreshUsers();
   }
-
   function clearBazaar() {
     if (!confirm("Clear ALL bazaar listings? This cannot be undone.")) return;
     safeSet("ml_bazaar", "[]");
     setMsg("bzMsg", "Bazaar cleared", true);
   }
-
   function bind() {
     var unlockBtn = document.getElementById("unlockBtn");
     var codeInput = document.getElementById("ownerCode");
     if (unlockBtn) unlockBtn.onclick = tryUnlock;
-    if (codeInput) {
-      codeInput.addEventListener("keydown", function (e) {
-        if (e.key === "Enter") tryUnlock();
-      });
-    }
-    var r = document.getElementById("refreshBtn");
-    if (r) r.onclick = refreshUsers;
-    var a = document.getElementById("addTokBtn");
-    if (a) a.onclick = function () { adminTokens(1); };
-    var b = document.getElementById("remTokBtn");
-    if (b) b.onclick = function () { adminTokens(-1); };
-    var c = document.getElementById("addBlBtn");
-    if (c) c.onclick = function () { adminBlook(1); };
-    var d = document.getElementById("remBlBtn");
-    if (d) d.onclick = function () { adminBlook(-1); };
-    var e = document.getElementById("clearBzBtn");
-    if (e) e.onclick = clearBazaar;
-
-    try {
-      if (sessionStorage.getItem("ml_coowner") === "1") showPanel();
-    } catch (err) {}
+    if (codeInput) codeInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") tryUnlock();
+    });
+    var r = document.getElementById("refreshBtn"); if (r) r.onclick = refreshUsers;
+    var a = document.getElementById("addTokBtn"); if (a) a.onclick = function () { adminTokens(1); };
+    var b = document.getElementById("remTokBtn"); if (b) b.onclick = function () { adminTokens(-1); };
+    var c = document.getElementById("addBlBtn"); if (c) c.onclick = function () { adminBlook(1); };
+    var d = document.getElementById("remBlBtn"); if (d) d.onclick = function () { adminBlook(-1); };
+    var e = document.getElementById("clearBzBtn"); if (e) e.onclick = clearBazaar;
+    try { if (sessionStorage.getItem(SESSION_KEY) === "1") showPanel(); } catch (err) {}
   }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", bind);
-  } else {
-    bind();
-  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bind);
+  else bind();
 })();
   </script>
 </body>
