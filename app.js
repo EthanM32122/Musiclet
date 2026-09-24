@@ -4,6 +4,10 @@ const RARITIES = CATALOG.rarities;
 const blookByName = Object.fromEntries(BLOOKS.map(b => [b.name, b]));
 
 let rarityFilter = "all";
+let autoRunning = false;
+let autoPack = null;
+let autoOpened = 0;
+let autoTimer = null;
 
 // ===== STORAGE =====
 function safeGet(k, f) {
@@ -55,6 +59,7 @@ function closeModals() {
   document.querySelectorAll(".modal-bg").forEach(m => m.classList.remove("open"));
 }
 function closeOpen() {
+  if (autoRunning) return; // don't close while auto is running
   document.getElementById("openModal").classList.remove("open");
 }
 
@@ -117,6 +122,7 @@ function afterLogin(u) {
 }
 
 function logout() {
+  stopAuto();
   safeSet("ml_current", "");
   document.getElementById("app").classList.remove("active");
   document.getElementById("landing").classList.add("active");
@@ -124,6 +130,7 @@ function logout() {
 
 // ===== PAGES =====
 function showPage(page) {
+  if (autoRunning && page !== "market") stopAuto();
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
   document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
   const panel = document.getElementById("page-" + page);
@@ -165,6 +172,7 @@ function refreshUI() {
 
   renderMarket();
   renderBlooks();
+  updateAutoBar();
 }
 
 // ===== MARKET =====
@@ -174,12 +182,28 @@ function renderMarket() {
   grid.innerHTML = "";
   PACKS.forEach(p => {
     const card = document.createElement("div");
-    card.className = "pack-card";
+    card.className = "pack-card" + (autoRunning && autoPack === p.name ? " auto-active" : "");
     card.innerHTML =
       '<img src="' + p.img + '" alt="' + p.name + '" onerror="this.style.background=\'' + p.color1 + '\'">' +
       "<h3>" + p.name + "</h3>" +
-      '<div class="pack-price">' + p.price + " 🪙</div>";
-    card.onclick = () => openPack(p.name);
+      '<div class="pack-price">' + p.price + " 🪙</div>" +
+      '<div class="pack-actions">' +
+        '<button class="btn-pack btn-open-1" data-pack="' + p.name + '">Open</button>' +
+        '<button class="btn-pack btn-auto" data-pack="' + p.name + '">⚡ Auto</button>' +
+      "</div>";
+    card.querySelector(".btn-open-1").onclick = (e) => {
+      e.stopPropagation();
+      if (autoRunning) return;
+      openPack(p.name, false);
+    };
+    card.querySelector(".btn-auto").onclick = (e) => {
+      e.stopPropagation();
+      if (autoRunning && autoPack === p.name) {
+        stopAuto();
+      } else {
+        startAuto(p.name);
+      }
+    };
     grid.appendChild(card);
   });
 }
@@ -197,32 +221,114 @@ function rollPack(packName) {
   return entries[entries.length - 1];
 }
 
-function openPack(name) {
+function openPack(name, isAuto) {
   const u = currentUser();
-  if (!u) return;
+  if (!u) return false;
   const d = getData(u);
   const pack = PACKS.find(p => p.name === name);
-  if (!pack) return;
+  if (!pack) return false;
   if (d.tokens < pack.price) {
-    alert("Not enough tokens! Need " + pack.price + " 🪙");
-    return;
+    if (!isAuto) alert("Not enough tokens! Need " + pack.price + " 🪙");
+    return false;
   }
   d.tokens -= pack.price;
   d.packsOpened = (d.packsOpened || 0) + 1;
   const blook = rollPack(name);
-  if (!blook) return;
+  if (!blook) return false;
   d.inventory[blook.name] = (d.inventory[blook.name] || 0) + 1;
   const rar = RARITIES[blook.rarity] || {};
   d.exp += rar.exp || 5;
   saveData(u, d);
+
+  // Update token display immediately
+  document.getElementById("tokenCount").textContent = d.tokens.toLocaleString();
 
   document.getElementById("openImg").src = blook.img;
   document.getElementById("openName").textContent = blook.name;
   const col = rar.color || "#fff";
   document.getElementById("openRarity").innerHTML =
     '<span style="color:' + col + '">' + blook.rarity + " · " + (blook.chance || "?") + "%</span>";
+
+  const title = document.getElementById("openTitle");
+  const countEl = document.getElementById("openAutoCount");
+  const okBtn = document.getElementById("openOkBtn");
+
+  if (isAuto) {
+    autoOpened++;
+    title.textContent = "Auto Open";
+    countEl.style.display = "block";
+    countEl.textContent = "Opened " + autoOpened + " · " + d.tokens.toLocaleString() + " 🪙 left";
+    okBtn.style.display = "none";
+  } else {
+    title.textContent = "You got…";
+    countEl.style.display = "none";
+    okBtn.style.display = "block";
+  }
+
   document.getElementById("openModal").classList.add("open");
+
+  if (!isAuto) refreshUI();
+  return true;
+}
+
+// ===== AUTO OPEN =====
+function startAuto(packName) {
+  if (autoRunning) stopAuto();
+  const u = currentUser();
+  if (!u) return;
+  const d = getData(u);
+  const pack = PACKS.find(p => p.name === packName);
+  if (!pack) return;
+  if (d.tokens < pack.price) {
+    alert("Not enough tokens! Need " + pack.price + " 🪙");
+    return;
+  }
+
+  autoRunning = true;
+  autoPack = packName;
+  autoOpened = 0;
+  updateAutoBar();
+  renderMarket();
+
+  function tick() {
+    if (!autoRunning) return;
+    const ok = openPack(autoPack, true);
+    if (!ok) {
+      stopAuto();
+      return;
+    }
+    updateAutoBar();
+    autoTimer = setTimeout(tick, 450);
+  }
+  tick();
+}
+
+function stopAuto() {
+  autoRunning = false;
+  autoPack = null;
+  if (autoTimer) {
+    clearTimeout(autoTimer);
+    autoTimer = null;
+  }
+  const okBtn = document.getElementById("openOkBtn");
+  if (okBtn) okBtn.style.display = "block";
+  const title = document.getElementById("openTitle");
+  if (title && autoOpened > 0) title.textContent = "Auto done — " + autoOpened + " packs";
+  updateAutoBar();
   refreshUI();
+}
+
+function updateAutoBar() {
+  const status = document.getElementById("autoStatus");
+  const stopBtn = document.getElementById("autoStopBtn");
+  if (!status || !stopBtn) return;
+  if (autoRunning) {
+    status.textContent = "Opening " + autoPack + "… (" + autoOpened + " opened)";
+    stopBtn.style.display = "inline-block";
+  } else {
+    status.textContent = "Click Auto on a pack to open continuously";
+    stopBtn.style.display = "none";
+  }
 }
 
 // ===== BLOOKS =====
@@ -306,7 +412,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelectorAll(".modal-bg").forEach(bg => {
     bg.addEventListener("click", e => {
-      if (e.target === bg) closeModals();
+      if (e.target === bg) {
+        if (bg.id === "openModal" && autoRunning) return;
+        closeModals();
+      }
     });
   });
 });
