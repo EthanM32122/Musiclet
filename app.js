@@ -8,7 +8,7 @@ let autoRunning = false;
 let autoPack = null;
 let autoOpened = 0;
 let autoTimer = null;
-const AUTO_DELAY_MS = 900; // 0.90 seconds between each open
+const AUTO_DELAY_MS = 900;
 
 // ===== STORAGE =====
 function safeGet(k, f) {
@@ -16,6 +16,9 @@ function safeGet(k, f) {
 }
 function safeSet(k, v) {
   try { localStorage.setItem(k, v); return true; } catch (e) { return false; }
+}
+function safeRemove(k) {
+  try { localStorage.removeItem(k); } catch (e) {}
 }
 function getUsers() {
   try { return JSON.parse(safeGet("ml_users", "{}")); } catch (e) { return {}; }
@@ -171,9 +174,129 @@ function refreshUI() {
     }
   }
 
+  const settingsUser = document.getElementById("settingsCurrentUser");
+  if (settingsUser) settingsUser.textContent = u;
+
   renderMarket();
   renderBlooks();
   updateAutoBar();
+}
+
+// ===== SETTINGS =====
+function setMsg(id, text, ok) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = text;
+  el.className = "settings-msg " + (ok ? "ok" : "err");
+}
+
+function changeUsername() {
+  const u = currentUser();
+  if (!u) return;
+  const newName = (document.getElementById("newUsername").value || "").trim();
+  const pass = document.getElementById("usernamePass").value || "";
+
+  if (newName.length < 3 || newName.length > 20) {
+    setMsg("usernameMsg", "Username must be 3–20 characters", false);
+    return;
+  }
+  if (newName.toLowerCase() === u.toLowerCase()) {
+    setMsg("usernameMsg", "That's already your username", false);
+    return;
+  }
+
+  const users = getUsers();
+  const key = u.toLowerCase();
+  const user = users[key];
+  if (!user || user.password !== pass) {
+    setMsg("usernameMsg", "Wrong password", false);
+    return;
+  }
+  if (users[newName.toLowerCase()]) {
+    setMsg("usernameMsg", "That username is taken", false);
+    return;
+  }
+
+  // Move account data
+  const data = getData(u);
+  delete users[key];
+  users[newName.toLowerCase()] = { username: newName, password: pass };
+  safeSet("ml_users", JSON.stringify(users));
+  safeRemove("ml_data_" + u);
+  saveData(newName, data);
+  safeSet("ml_current", newName);
+
+  document.getElementById("userDisplay").textContent = newName;
+  document.getElementById("newUsername").value = "";
+  document.getElementById("usernamePass").value = "";
+  setMsg("usernameMsg", "Username updated to " + newName + "!", true);
+  refreshUI();
+}
+
+function changePassword() {
+  const u = currentUser();
+  if (!u) return;
+  const oldP = document.getElementById("oldPassword").value || "";
+  const newP = document.getElementById("newPassword").value || "";
+  const newP2 = document.getElementById("newPassword2").value || "";
+
+  if (newP.length < 4) {
+    setMsg("passwordMsg", "New password must be at least 4 characters", false);
+    return;
+  }
+  if (newP !== newP2) {
+    setMsg("passwordMsg", "New passwords do not match", false);
+    return;
+  }
+
+  const users = getUsers();
+  const key = u.toLowerCase();
+  const user = users[key];
+  if (!user || user.password !== oldP) {
+    setMsg("passwordMsg", "Current password is wrong", false);
+    return;
+  }
+
+  users[key].password = newP;
+  safeSet("ml_users", JSON.stringify(users));
+
+  document.getElementById("oldPassword").value = "";
+  document.getElementById("newPassword").value = "";
+  document.getElementById("newPassword2").value = "";
+  setMsg("passwordMsg", "Password updated!", true);
+}
+
+function deleteAccount() {
+  const u = currentUser();
+  if (!u) return;
+  const confirmName = (document.getElementById("deleteConfirm").value || "").trim();
+  const pass = document.getElementById("deletePass").value || "";
+
+  if (confirmName !== u) {
+    setMsg("deleteMsg", "Username does not match", false);
+    return;
+  }
+
+  const users = getUsers();
+  const key = u.toLowerCase();
+  const user = users[key];
+  if (!user || user.password !== pass) {
+    setMsg("deleteMsg", "Wrong password", false);
+    return;
+  }
+
+  if (!confirm("Really delete your account forever? All tokens and Blooks will be lost.")) {
+    return;
+  }
+
+  delete users[key];
+  safeSet("ml_users", JSON.stringify(users));
+  safeRemove("ml_data_" + u);
+  stopAuto();
+  safeSet("ml_current", "");
+  document.getElementById("app").classList.remove("active");
+  document.getElementById("landing").classList.add("active");
+  alert("Account deleted.");
 }
 
 // ===== MARKET =====
