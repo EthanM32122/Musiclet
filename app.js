@@ -8,7 +8,7 @@ let autoRunning = false;
 let autoPack = null;
 let autoOpened = 0;
 let autoTimer = null;
-const AUTO_DELAY_MS = 2000; // 2 seconds between each open
+const AUTO_DELAY_MS = 900; // 0.90 seconds between each open
 
 // ===== STORAGE =====
 function safeGet(k, f) {
