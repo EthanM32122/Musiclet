@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" width="120" height="140">
+  <path d="M60 8 L108 36 L108 78 Q108 118 60 132 Q12 118 12 78 L12 36 Z" fill="#0d2137" stroke="#26a69a" stroke-width="3"/>
+  <rect x="32" y="40" width="56" height="40" rx="6" fill="#1565c0" stroke="#4fc3f7" stroke-width="2"/>
+  <text x="48" y="58" font-family="monospace" font-size="12" fill="#80deea"></></text>
+  <text x="42" y="72" font-family="monospace" font-size="8" fill="#b3e5fc">···</text>
+  <rect x="18" y="90" width="84" height="26" rx="6" fill="#1e88e5"/>
+  <text x="60" y="108" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="12" font-weight="800" fill="#fff">DEVELOPER</text>
+</svg>
