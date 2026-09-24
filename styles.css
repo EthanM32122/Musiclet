@@ -21,7 +21,6 @@ body {
   min-height: 100vh;
 }
 
-/* Same checkered background on landing + in-game */
 #landing,
 #app {
   background:
@@ -143,6 +142,13 @@ body {
 }
 .btn-ghost:hover { background: rgba(255,255,255,0.14); color: #fff; filter: none; }
 
+.btn-stop {
+  background: linear-gradient(180deg, #ef5350, #c62828);
+  box-shadow: 0 3px 0 #8e0000;
+  color: #fff;
+}
+.btn-stop:hover { filter: brightness(1.1); }
+
 .topbar {
   display: flex;
   align-items: center;
@@ -258,6 +264,28 @@ body {
   flex-wrap: wrap;
 }
 
+/* Auto Open bar */
+.auto-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding: 14px 18px;
+}
+
+.auto-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.auto-info strong {
+  font-size: 15px;
+  color: var(--gold);
+}
+
 .pack-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -270,14 +298,18 @@ body {
   border-radius: 16px;
   padding: 16px;
   text-align: center;
-  cursor: pointer;
-  transition: transform 0.15s, border-color 0.15s;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
   backdrop-filter: blur(8px);
 }
 
 .pack-card:hover {
   transform: translateY(-4px);
   border-color: rgba(38, 198, 218, 0.4);
+}
+
+.pack-card.auto-active {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(255, 213, 79, 0.35), 0 8px 24px rgba(0,0,0,0.3);
 }
 
 .pack-card img {
@@ -290,7 +322,39 @@ body {
 }
 
 .pack-card h3 { font-size: 15px; margin-bottom: 6px; }
-.pack-price { color: var(--gold); font-weight: 800; font-size: 14px; }
+.pack-price { color: var(--gold); font-weight: 800; font-size: 14px; margin-bottom: 10px; }
+
+.pack-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.btn-pack {
+  border: none;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: #fff;
+  transition: transform 0.12s, filter 0.12s;
+  flex: 1;
+}
+
+.btn-pack:hover { transform: scale(1.04); filter: brightness(1.1); }
+.btn-pack:active { transform: scale(0.97); }
+
+.btn-open-1 {
+  background: linear-gradient(180deg, #26c6da, #00838f);
+  box-shadow: 0 3px 0 #006064;
+}
+
+.btn-auto {
+  background: linear-gradient(180deg, #ffd54f, #f9a825);
+  color: #3e2723;
+  box-shadow: 0 3px 0 #f57f17;
+}
 
 .rarity-bar {
   display: flex;
@@ -452,7 +516,12 @@ body {
   display: block;
 }
 .open-name { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
-.open-rarity { font-weight: 700; margin-bottom: 20px; }
+.open-rarity { font-weight: 700; margin-bottom: 8px; }
+.open-auto-count {
+  font-size: 13px;
+  color: #78909c;
+  margin-bottom: 12px;
+}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
