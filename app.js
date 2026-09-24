@@ -8,6 +8,7 @@ let autoRunning = false;
 let autoPack = null;
 let autoOpened = 0;
 let autoTimer = null;
+const AUTO_DELAY_MS = 2000; // 2 seconds between each open
 
 // ===== STORAGE =====
 function safeGet(k, f) {
@@ -59,7 +60,7 @@ function closeModals() {
   document.querySelectorAll(".modal-bg").forEach(m => m.classList.remove("open"));
 }
 function closeOpen() {
-  if (autoRunning) return; // don't close while auto is running
+  if (autoRunning) return;
   document.getElementById("openModal").classList.remove("open");
 }
 
@@ -240,7 +241,6 @@ function openPack(name, isAuto) {
   d.exp += rar.exp || 5;
   saveData(u, d);
 
-  // Update token display immediately
   document.getElementById("tokenCount").textContent = d.tokens.toLocaleString();
 
   document.getElementById("openImg").src = blook.img;
@@ -298,7 +298,7 @@ function startAuto(packName) {
       return;
     }
     updateAutoBar();
-    autoTimer = setTimeout(tick, 450);
+    autoTimer = setTimeout(tick, AUTO_DELAY_MS);
   }
   tick();
 }
