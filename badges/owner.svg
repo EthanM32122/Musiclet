@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" width="120" height="140">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5e35b1"/><stop offset="100%" stop-color="#311b92"/></linearGradient>
+  </defs>
+  <path d="M60 8 L108 36 L108 78 Q108 118 60 132 Q12 118 12 78 L12 36 Z" fill="url(#g)" stroke="#b39ddb" stroke-width="3"/>
+  <path d="M40 52 L50 48 L60 56 L70 48 L80 52 L76 68 L44 68 Z" fill="#ffc107"/>
+  <rect x="44" y="68" width="32" height="8" rx="2" fill="#ffc107"/>
+  <rect x="20" y="88" width="80" height="28" rx="6" fill="#7e57c2"/>
+  <text x="60" y="108" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="14" font-weight="800" fill="#fff">OWNER</text>
+</svg>
