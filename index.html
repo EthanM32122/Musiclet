@@ -93,6 +93,13 @@
           <h1>Market</h1>
           <span class="muted">Buy & open packs to collect Blooks</span>
         </div>
+        <div class="auto-bar card" id="autoBar">
+          <div class="auto-info">
+            <strong>⚡ Auto Open</strong>
+            <span class="muted" id="autoStatus">Click Auto on a pack to open continuously</span>
+          </div>
+          <button class="btn btn-sm btn-stop" id="autoStopBtn" onclick="stopAuto()" style="display:none">⏹ Stop</button>
+        </div>
         <div class="pack-grid" id="packGrid"></div>
       </section>
 
@@ -141,11 +148,12 @@
   <!-- OPEN PACK MODAL -->
   <div class="modal-bg" id="openModal">
     <div class="modal open-modal">
-      <h2>You got…</h2>
+      <h2 id="openTitle">You got…</h2>
       <img id="openImg" src="" alt="" class="open-img" />
       <div class="open-name" id="openName">—</div>
       <div class="open-rarity" id="openRarity">—</div>
-      <button class="btn btn-green full" onclick="closeOpen()">Nice!</button>
+      <div class="open-auto-count muted" id="openAutoCount" style="display:none"></div>
+      <button class="btn btn-green full" id="openOkBtn" onclick="closeOpen()">Nice!</button>
     </div>
   </div>
 
