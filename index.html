@@ -34,7 +34,11 @@
       </div>
       <div class="topbar-right">
         <span class="token-pill">🪙 <span id="tokenCount">0</span></span>
-        <button type="button" class="user-pill user-pill-btn" id="userDisplay" onclick="openProfile()" title="View profile">—</button>
+        <button type="button" class="pfp-btn" id="pfpBtn" onclick="openEquipModal()" title="Change avatar">
+          <img id="pfpImg" src="" alt="" style="display:none" />
+          <span id="pfpLetter">?</span>
+        </button>
+        <button type="button" class="user-pill user-pill-btn" id="userDisplay" onclick="openProfile()" title="View stats">—</button>
         <button class="btn btn-sm btn-ghost" onclick="logout()">Log out</button>
       </div>
     </header>
@@ -48,7 +52,6 @@
     </nav>
 
     <main class="content">
-      <!-- STATS -->
       <section id="page-stats" class="page active">
         <div class="page-head">
           <h1>Stats</h1>
@@ -89,7 +92,6 @@
         </div>
       </section>
 
-      <!-- MARKET -->
       <section id="page-market" class="page">
         <div class="page-head">
           <h1>Market</h1>
@@ -105,7 +107,6 @@
         <div class="pack-grid" id="packGrid"></div>
       </section>
 
-      <!-- BAZAAR -->
       <section id="page-bazaar" class="page">
         <div class="page-head">
           <h1>Bazaar</h1>
@@ -118,7 +119,6 @@
         <div id="bazaarList" class="bazaar-list"></div>
       </section>
 
-      <!-- BLOOKS -->
       <section id="page-blooks" class="page">
         <div class="page-head">
           <h1>My Blooks</h1>
@@ -128,13 +128,11 @@
         <div id="blooksByPack"></div>
       </section>
 
-      <!-- SETTINGS -->
       <section id="page-settings" class="page">
         <div class="page-head">
           <h1>Settings</h1>
           <span class="muted">Manage your account</span>
         </div>
-
         <div class="settings-stack">
           <div class="card settings-card">
             <h3>🪙 Token Trade</h3>
@@ -148,7 +146,6 @@
             <p class="settings-msg" id="tradeMsg"></p>
             <button class="btn btn-green btn-sm" onclick="sendTokens()">Send Tokens</button>
           </div>
-
           <div class="card settings-card">
             <h3>Change Username</h3>
             <p class="muted settings-desc">Your current username: <strong id="settingsCurrentUser">—</strong></p>
@@ -159,7 +156,6 @@
             <p class="settings-msg" id="usernameMsg"></p>
             <button class="btn btn-green btn-sm" onclick="changeUsername()">Update Username</button>
           </div>
-
           <div class="card settings-card">
             <h3>Change Password</h3>
             <label class="settings-label">Current password</label>
@@ -171,7 +167,6 @@
             <p class="settings-msg" id="passwordMsg"></p>
             <button class="btn btn-green btn-sm" onclick="changePassword()">Update Password</button>
           </div>
-
           <div class="card settings-card settings-danger">
             <h3>Delete Account</h3>
             <p class="muted settings-desc">This permanently deletes your account, tokens, and all Blooks. This cannot be undone.</p>
@@ -187,7 +182,6 @@
     </main>
   </div>
 
-  <!-- LOGIN MODAL -->
   <div class="modal-bg" id="loginModal">
     <div class="modal">
       <h2>Log In</h2>
@@ -201,7 +195,6 @@
     </div>
   </div>
 
-  <!-- REGISTER MODAL -->
   <div class="modal-bg" id="regModal">
     <div class="modal">
       <h2>Register</h2>
@@ -217,7 +210,6 @@
     </div>
   </div>
 
-  <!-- OPEN PACK MODAL -->
   <div class="modal-bg" id="openModal">
     <div class="modal open-modal">
       <h2 id="openTitle">You got…</h2>
@@ -229,20 +221,17 @@
     </div>
   </div>
 
-  <!-- BLOOK ACTION MODAL -->
   <div class="modal-bg" id="blookActionModal">
     <div class="modal">
       <h2 id="baTitle">Blook</h2>
       <img id="baImg" src="" alt="" class="open-img" />
       <div class="open-name" id="baName">—</div>
       <div class="muted" id="baInfo" style="text-align:center;margin-bottom:12px"></div>
-
       <div class="ba-section">
         <strong>Instant sell</strong>
         <p class="muted" style="margin:6px 0 10px">Sell back to the game for a fixed price</p>
         <button class="btn btn-sm btn-green full" id="baSellBtn" onclick="confirmInstantSell()">Sell for 0 🪙</button>
       </div>
-
       <div class="ba-section" style="margin-top:18px">
         <strong>List on Bazaar</strong>
         <p class="muted" style="margin:6px 0 8px">Set your own price for other players</p>
@@ -251,27 +240,39 @@
         <p class="settings-msg" id="baListMsg"></p>
         <button class="btn btn-sm btn-purple full" onclick="confirmListBazaar()">List on Bazaar</button>
       </div>
-
       <button class="btn btn-sm btn-ghost full" style="margin-top:14px" onclick="closeBlookAction()">Cancel</button>
     </div>
   </div>
 
-  <!-- PROFILE MODAL -->
   <div class="modal-bg" id="profileModal">
     <div class="modal profile-modal">
       <div class="profile-header">
-        <div class="profile-avatar" id="profileAvatar">?</div>
+        <button type="button" class="profile-avatar" id="profileAvatarBtn" title="Change avatar">
+          <img id="profileAvatarImg" src="" alt="" style="display:none" />
+          <span id="profileAvatarLetter">?</span>
+        </button>
         <div>
           <h2 id="profileName">—</h2>
           <p class="muted" id="profileSubtitle">Level 1</p>
         </div>
       </div>
+      <h3 class="profile-section-title">Stats</h3>
       <div class="profile-stats" id="profileStats"></div>
       <h3 class="profile-section-title">Collection</h3>
       <div class="profile-blooks" id="profileBlooks"></div>
       <h3 class="profile-section-title">Bazaar listings</h3>
       <div class="profile-listings" id="profileListings"></div>
       <button class="btn btn-sm btn-ghost full" style="margin-top:16px" onclick="closeProfile()">Close</button>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="equipModal">
+    <div class="modal profile-modal">
+      <h2>Equip Avatar</h2>
+      <p class="muted" style="text-align:center;margin-bottom:12px">Pick a Blook from your collection</p>
+      <div class="equip-grid" id="equipGrid"></div>
+      <button class="btn btn-sm btn-ghost full" style="margin-top:14px" onclick="unequipBlook()">Use letter avatar</button>
+      <button class="btn btn-sm btn-ghost full" style="margin-top:8px" onclick="closeEquipModal()">Cancel</button>
     </div>
   </div>
 
