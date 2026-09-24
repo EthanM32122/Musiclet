@@ -53,9 +53,15 @@
 
     <main class="content">
       <section id="page-stats" class="page active">
-        <div class="page-head">
-          <h1>Stats</h1>
-          <span class="muted">Your progress on Musiclet</span>
+        <div class="page-head stats-head">
+          <button type="button" class="stats-pfp" id="statsPfpBtn" onclick="openEquipModal()" title="Change avatar">
+            <img id="statsPfpImg" src="" alt="" style="display:none" />
+            <span id="statsPfpLetter">?</span>
+          </button>
+          <div>
+            <h1>Stats</h1>
+            <span class="muted" id="statsPfpHint">Your progress on Musiclet · click photo to equip</span>
+          </div>
         </div>
         <div class="stats-grid">
           <div class="card stat-card">
