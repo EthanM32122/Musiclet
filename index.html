@@ -43,6 +43,7 @@
       <button class="nav-item active" data-page="stats" onclick="showPage('stats')">📊 Stats</button>
       <button class="nav-item" data-page="market" onclick="showPage('market')">🛒 Market</button>
       <button class="nav-item" data-page="blooks" onclick="showPage('blooks')">🎒 My Blooks</button>
+      <button class="nav-item" data-page="settings" onclick="showPage('settings')">⚙ Settings</button>
     </nav>
 
     <main class="content">
@@ -111,6 +112,53 @@
         </div>
         <div class="rarity-bar" id="rarityBar"></div>
         <div id="blooksByPack"></div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="page-settings" class="page">
+        <div class="page-head">
+          <h1>Settings</h1>
+          <span class="muted">Manage your account</span>
+        </div>
+
+        <div class="settings-stack">
+          <!-- Change Username -->
+          <div class="card settings-card">
+            <h3>Change Username</h3>
+            <p class="muted settings-desc">Your current username: <strong id="settingsCurrentUser">—</strong></p>
+            <label class="settings-label">New username</label>
+            <input type="text" id="newUsername" placeholder="3–20 characters" class="settings-input" />
+            <label class="settings-label">Current password</label>
+            <input type="password" id="usernamePass" placeholder="Confirm with password" class="settings-input" />
+            <p class="settings-msg" id="usernameMsg"></p>
+            <button class="btn btn-green btn-sm" onclick="changeUsername()">Update Username</button>
+          </div>
+
+          <!-- Change Password -->
+          <div class="card settings-card">
+            <h3>Change Password</h3>
+            <label class="settings-label">Current password</label>
+            <input type="password" id="oldPassword" placeholder="Current password" class="settings-input" />
+            <label class="settings-label">New password</label>
+            <input type="password" id="newPassword" placeholder="At least 4 characters" class="settings-input" />
+            <label class="settings-label">Confirm new password</label>
+            <input type="password" id="newPassword2" placeholder="Confirm new password" class="settings-input" />
+            <p class="settings-msg" id="passwordMsg"></p>
+            <button class="btn btn-green btn-sm" onclick="changePassword()">Update Password</button>
+          </div>
+
+          <!-- Delete Account -->
+          <div class="card settings-card settings-danger">
+            <h3>Delete Account</h3>
+            <p class="muted settings-desc">This permanently deletes your account, tokens, and all Blooks. This cannot be undone.</p>
+            <label class="settings-label">Type your username to confirm</label>
+            <input type="text" id="deleteConfirm" placeholder="Username" class="settings-input" />
+            <label class="settings-label">Password</label>
+            <input type="password" id="deletePass" placeholder="Password" class="settings-input" />
+            <p class="settings-msg" id="deleteMsg"></p>
+            <button class="btn btn-sm btn-danger" onclick="deleteAccount()">Delete My Account</button>
+          </div>
+        </div>
       </section>
     </main>
   </div>
