@@ -165,7 +165,6 @@ body {
 
 .topbar-left { display: flex; align-items: center; gap: 10px; }
 .brand { font-weight: 800; font-size: 18px; color: var(--teal); }
-
 .topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
 .token-pill, .user-pill {
@@ -177,9 +176,7 @@ body {
   color: var(--text);
   border: 1px solid var(--border);
 }
-
 .token-pill { color: #e65100; }
-
 .user-pill-btn {
   border: 1px solid var(--border);
   cursor: pointer;
@@ -207,16 +204,8 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 .pfp-btn:hover { transform: scale(1.06); filter: brightness(1.08); }
-.pfp-btn img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.pfp-btn #pfpLetter {
-  font-size: 15px;
-  font-weight: 900;
-  color: #0d47a1;
-}
+.pfp-btn img { width: 100%; height: 100%; object-fit: cover; }
+.pfp-btn #pfpLetter { font-size: 15px; font-weight: 900; color: #0d47a1; }
 
 .nav {
   display: flex;
@@ -227,7 +216,6 @@ body {
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(8px);
 }
-
 .nav-item {
   background: transparent;
   border: 1px solid transparent;
@@ -240,7 +228,6 @@ body {
   white-space: nowrap;
   transition: 0.15s;
 }
-
 .nav-item:hover { background: rgba(255,255,255,0.6); color: var(--text); }
 .nav-item.active {
   background: rgba(2, 136, 209, 0.15);
@@ -269,6 +256,29 @@ body {
 }
 .muted { color: var(--muted); font-size: 14px; }
 
+.stats-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.stats-pfp {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  border: 3px solid #81d4fa;
+  background: linear-gradient(145deg, #4fc3f7, #0288d1);
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}
+.stats-pfp:hover { transform: scale(1.05); filter: brightness(1.08); }
+.stats-pfp img { width: 100%; height: 100%; object-fit: cover; }
+.stats-pfp span { font-size: 28px; font-weight: 900; color: #0d47a1; }
+
 .card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -283,7 +293,6 @@ body {
   gap: 14px;
   margin-bottom: 20px;
 }
-
 .stat-card { text-align: center; }
 .stat-label {
   font-size: 12px;
@@ -312,7 +321,6 @@ body {
   margin-bottom: 20px;
   padding: 14px 18px;
 }
-
 .auto-info { display: flex; flex-direction: column; gap: 2px; }
 .auto-info strong { font-size: 15px; color: #e65100; }
 
@@ -321,7 +329,6 @@ body {
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 16px;
 }
-
 .pack-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -331,18 +338,15 @@ body {
   transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
   box-shadow: 0 4px 14px rgba(0, 60, 100, 0.08);
 }
-
 .pack-card:hover {
   transform: translateY(-4px);
   border-color: rgba(2, 136, 209, 0.4);
   box-shadow: 0 8px 24px rgba(0, 60, 100, 0.12);
 }
-
 .pack-card.auto-active {
   border-color: var(--gold);
   box-shadow: 0 0 0 2px rgba(249, 168, 37, 0.4), 0 8px 24px rgba(0,0,0,0.1);
 }
-
 .pack-card img {
   width: 100%;
   max-width: 120px;
@@ -351,7 +355,6 @@ body {
   margin-bottom: 10px;
   border-radius: 10px;
 }
-
 .pack-card h3 { font-size: 15px; margin-bottom: 6px; color: var(--text); }
 .pack-price { color: #e65100; font-weight: 800; font-size: 14px; margin-bottom: 10px; }
 .pack-actions { display: flex; gap: 6px; justify-content: center; }
@@ -399,7 +402,6 @@ body {
   grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
   gap: 10px;
 }
-
 .blook-slot {
   aspect-ratio: 1;
   background: rgba(255,255,255,0.75);
@@ -466,7 +468,6 @@ body {
 
 .profile-link { color: var(--teal); font-weight: 700; text-decoration: none; }
 .profile-link:hover { text-decoration: underline; }
-
 .profile-modal { max-width: 440px; }
 .profile-header {
   display: flex;
@@ -483,9 +484,7 @@ body {
   border: 2px solid #81d4fa; flex-shrink: 0;
   padding: 0; overflow: hidden; position: relative;
 }
-.profile-avatar img {
-  width: 100%; height: 100%; object-fit: cover;
-}
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .profile-header h2 {
   margin: 0; font-size: 22px; text-align: left; color: #1a3a5c;
 }
@@ -586,9 +585,7 @@ body {
   border-color: #0288d1;
   background: rgba(2,136,209,0.08);
 }
-.equip-slot img {
-  width: 56px; height: 56px; object-fit: contain;
-}
+.equip-slot img { width: 56px; height: 56px; object-fit: contain; }
 .equip-name {
   font-size: 10px; font-weight: 700; color: var(--text);
   text-align: center; line-height: 1.2;
