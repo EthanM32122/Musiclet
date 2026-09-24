@@ -3,7 +3,6 @@ const PACKS = CATALOG.packs;
 const RARITIES = CATALOG.rarities;
 const blookByName = Object.fromEntries(BLOOKS.map(b => [b.name, b]));
 
-// Sell prices by rarity (tokens)
 const SELL_PRICES = {
   Common: 1,
   Uncommon: 5,
@@ -205,6 +204,63 @@ function setMsg(id, text, ok) {
   if (!el) return;
   el.textContent = text;
   el.className = "settings-msg " + (ok ? "ok" : "err");
+}
+
+function sendTokens() {
+  const u = currentUser();
+  if (!u) return;
+
+  const toName = (document.getElementById("tradeUser").value || "").trim();
+  const amount = Math.floor(Number(document.getElementById("tradeAmount").value) || 0);
+  const pass = document.getElementById("tradePass").value || "";
+
+  if (!toName) {
+    setMsg("tradeMsg", "Enter a username", false);
+    return;
+  }
+  if (toName.toLowerCase() === u.toLowerCase()) {
+    setMsg("tradeMsg", "You can't send tokens to yourself", false);
+    return;
+  }
+  if (amount < 1) {
+    setMsg("tradeMsg", "Amount must be at least 1", false);
+    return;
+  }
+
+  const users = getUsers();
+  const myKey = u.toLowerCase();
+  const me = users[myKey];
+  if (!me || me.password !== pass) {
+    setMsg("tradeMsg", "Wrong password", false);
+    return;
+  }
+
+  const theirKey = toName.toLowerCase();
+  const them = users[theirKey];
+  if (!them) {
+    setMsg("tradeMsg", "User not found", false);
+    return;
+  }
+
+  const myData = getData(u);
+  if (myData.tokens < amount) {
+    setMsg("tradeMsg", "Not enough tokens (you have " + myData.tokens + ")", false);
+    return;
+  }
+
+  const theirRealName = them.username;
+  const theirData = getData(theirRealName);
+
+  myData.tokens -= amount;
+  theirData.tokens += amount;
+  saveData(u, myData);
+  saveData(theirRealName, theirData);
+
+  document.getElementById("tradeUser").value = "";
+  document.getElementById("tradeAmount").value = "";
+  document.getElementById("tradePass").value = "";
+  setMsg("tradeMsg", "Sent " + amount.toLocaleString() + " 🪙 to " + theirRealName + "!", true);
+  refreshUI();
 }
 
 function changeUsername() {
