@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" width="120" height="140">
+  <path d="M60 8 L108 36 L108 78 Q108 118 60 132 Q12 118 12 78 L12 36 Z" fill="#42a5f5" stroke="#90caf9" stroke-width="3"/>
+  <path d="M36 70 Q36 50 50 50 Q60 50 60 58 Q60 50 70 50 Q84 50 84 70 L84 78 L36 78 Z" fill="#fff"/>
+  <path d="M55 48 L60 40 L65 48 Z" fill="#e53935"/>
+  <ellipse cx="60" cy="42" rx="6" ry="5" fill="#e53935"/>
+  <rect x="18" y="90" width="84" height="26" rx="6" fill="#ffb300"/>
+  <text x="60" y="108" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="13" font-weight="800" fill="#fff">HELPER</text>
+</svg>
