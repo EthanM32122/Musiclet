@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 130" width="120" height="130">
+  <path d="M60 6 L105 24 L105 70 Q105 100 60 124 Q15 100 15 70 L15 24 Z" fill="#1a0a3e" stroke="#7e57c2" stroke-width="3"/>
+  <path d="M40 42 L50 38 L60 48 L70 38 L80 42 L76 58 L44 58 Z" fill="#b388ff"/>
+  <rect x="44" y="58" width="32" height="6" rx="2" fill="#b388ff"/>
+  <text x="60" y="92" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="22" font-weight="900" fill="#fff">MOD</text>
+</svg>
