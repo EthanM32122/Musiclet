@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Musiclet</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="badge-styles.css" />
 </head>
 <body>
   <div id="landing" class="screen active">
     <div class="landing-inner">
-      <div class="logo-box">
-        <div class="logo-m">M</div>
-        <div class="logo-text">Musiclet</div>
-      </div>
+      <div class="logo-box"><div class="logo-m">M</div><div class="logo-text">Musiclet</div></div>
       <h1 class="main-title">Musiclet</h1>
       <p class="tagline">Blooket-inspired music quiz platform<br>Coded & owned by Ethan32</p>
       <div class="btn-row">
@@ -21,27 +19,19 @@
       </div>
     </div>
   </div>
-
   <div id="app" class="screen">
     <header class="topbar">
-      <div class="topbar-left">
-        <div class="logo-box mini">
-          <div class="logo-m">M</div>
-        </div>
-        <span class="brand">Musiclet</span>
-      </div>
+      <div class="topbar-left"><div class="logo-box mini"><div class="logo-m">M</div></div><span class="brand">Musiclet</span></div>
       <div class="topbar-right">
         <span class="token-pill">🪙 <span id="tokenCount">0</span></span>
         <button type="button" class="pfp-btn" id="pfpBtn" onclick="openEquipModal()" title="Change avatar">
-          <img id="pfpImg" src="" alt="" style="display:none" />
-          <span id="pfpLetter">?</span>
+          <img id="pfpImg" src="" alt="" style="display:none" /><span id="pfpLetter">?</span>
         </button>
         <span class="user-badges" id="userBadges"></span>
         <button type="button" class="user-pill user-pill-btn" id="userDisplay" onclick="openProfile()" title="View stats">—</button>
         <button class="btn btn-sm btn-ghost" onclick="logout()">Log out</button>
       </div>
     </header>
-
     <nav class="nav" id="nav">
       <button class="nav-item active" data-page="stats" onclick="showPage('stats')">📊 Stats</button>
       <button class="nav-item" data-page="market" onclick="showPage('market')">🛒 Market</button>
@@ -49,18 +39,13 @@
       <button class="nav-item" data-page="blooks" onclick="showPage('blooks')">🎒 My Blooks</button>
       <button class="nav-item" data-page="settings" onclick="showPage('settings')">⚙ Settings</button>
     </nav>
-
     <main class="content">
       <section id="page-stats" class="page active">
         <div class="page-head stats-head">
           <button type="button" class="stats-pfp" id="statsPfpBtn" onclick="openEquipModal()" title="Change avatar">
-            <img id="statsPfpImg" src="" alt="" style="display:none" />
-            <span id="statsPfpLetter">?</span>
+            <img id="statsPfpImg" src="" alt="" style="display:none" /><span id="statsPfpLetter">?</span>
           </button>
-          <div>
-            <h1>Stats</h1>
-            <span class="muted" id="statsPfpHint">Your progress on Musiclet · click photo to equip</span>
-          </div>
+          <div><h1>Stats</h1><span class="muted">Your progress on Musiclet · click photo to equip</span></div>
         </div>
         <div class="stats-grid">
           <div class="card stat-card"><div class="stat-label">Tokens</div><div class="stat-value" id="statTokens">0</div></div>
@@ -75,74 +60,58 @@
           <button class="btn btn-green" id="claimBtn" onclick="claimDaily()">Claim 4000 🪙</button>
         </div>
       </section>
-
       <section id="page-market" class="page">
-        <div class="page-head"><h1>Market</h1><span class="muted">Buy & open packs to collect Blooks</span></div>
+        <div class="page-head"><h1>Market</h1><span class="muted">Buy & open packs</span></div>
         <div class="auto-bar card" id="autoBar">
-          <div class="auto-info"><strong>⚡ Auto Open</strong><span class="muted" id="autoStatus">Click Auto on a pack to open continuously</span></div>
+          <div class="auto-info"><strong>⚡ Auto Open</strong><span class="muted" id="autoStatus">Click Auto on a pack</span></div>
           <button class="btn btn-sm btn-stop" id="autoStopBtn" onclick="stopAuto()" style="display:none">⏹ Stop</button>
         </div>
         <div class="pack-grid" id="packGrid"></div>
       </section>
-
       <section id="page-bazaar" class="page">
-        <div class="page-head"><h1>Bazaar</h1><span class="muted">Buy Blooks listed by other players</span></div>
+        <div class="page-head"><h1>Bazaar</h1><span class="muted">Buy from other players</span></div>
         <div class="bazaar-controls card">
-          <input type="text" id="bazaarSearch" class="settings-input" placeholder="Search blook name…" oninput="renderBazaar()" />
+          <input type="text" id="bazaarSearch" class="settings-input" placeholder="Search…" oninput="renderBazaar()" />
           <div class="rarity-bar" id="bazaarPackBar"></div>
         </div>
         <div id="bazaarList" class="bazaar-list"></div>
       </section>
-
       <section id="page-blooks" class="page">
-        <div class="page-head"><h1>My Blooks</h1><span class="muted">Click a Blook to sell or list on the Bazaar</span></div>
+        <div class="page-head"><h1>My Blooks</h1><span class="muted">Click to sell or list</span></div>
         <div class="rarity-bar" id="rarityBar"></div>
         <div id="blooksByPack"></div>
       </section>
-
       <section id="page-settings" class="page">
-        <div class="page-head"><h1>Settings</h1><span class="muted">Manage your account</span></div>
+        <div class="page-head"><h1>Settings</h1><span class="muted">Manage account</span></div>
         <div class="settings-stack">
           <div class="card settings-card">
             <h3>🪙 Token Trade</h3>
-            <p class="muted settings-desc">Send tokens to another Musiclet player (same device / browser)</p>
-            <label class="settings-label">Their username</label>
-            <input type="text" id="tradeUser" placeholder="Username to send to" class="settings-input" />
-            <label class="settings-label">Amount</label>
-            <input type="number" id="tradeAmount" placeholder="Tokens to send" min="1" class="settings-input" />
-            <label class="settings-label">Your password</label>
-            <input type="password" id="tradePass" placeholder="Confirm with password" class="settings-input" />
+            <label class="settings-label">Username</label><input type="text" id="tradeUser" class="settings-input" />
+            <label class="settings-label">Amount</label><input type="number" id="tradeAmount" class="settings-input" min="1" />
+            <label class="settings-label">Password</label><input type="password" id="tradePass" class="settings-input" />
             <p class="settings-msg" id="tradeMsg"></p>
             <button class="btn btn-green btn-sm" onclick="sendTokens()">Send Tokens</button>
           </div>
           <div class="card settings-card">
             <h3>Change Username</h3>
-            <p class="muted settings-desc">Your current username: <strong id="settingsCurrentUser">—</strong></p>
-            <label class="settings-label">New username</label>
-            <input type="text" id="newUsername" placeholder="3–20 characters" class="settings-input" />
-            <label class="settings-label">Current password</label>
-            <input type="password" id="usernamePass" placeholder="Confirm with password" class="settings-input" />
+            <p class="muted settings-desc">Current: <strong id="settingsCurrentUser">—</strong></p>
+            <label class="settings-label">New username</label><input type="text" id="newUsername" class="settings-input" />
+            <label class="settings-label">Password</label><input type="password" id="usernamePass" class="settings-input" />
             <p class="settings-msg" id="usernameMsg"></p>
             <button class="btn btn-green btn-sm" onclick="changeUsername()">Update Username</button>
           </div>
           <div class="card settings-card">
             <h3>Change Password</h3>
-            <label class="settings-label">Current password</label>
-            <input type="password" id="oldPassword" placeholder="Current password" class="settings-input" />
-            <label class="settings-label">New password</label>
-            <input type="password" id="newPassword" placeholder="At least 4 characters" class="settings-input" />
-            <label class="settings-label">Confirm new password</label>
-            <input type="password" id="newPassword2" placeholder="Confirm new password" class="settings-input" />
+            <label class="settings-label">Current</label><input type="password" id="oldPassword" class="settings-input" />
+            <label class="settings-label">New</label><input type="password" id="newPassword" class="settings-input" />
+            <label class="settings-label">Confirm</label><input type="password" id="newPassword2" class="settings-input" />
             <p class="settings-msg" id="passwordMsg"></p>
             <button class="btn btn-green btn-sm" onclick="changePassword()">Update Password</button>
           </div>
           <div class="card settings-card settings-danger">
             <h3>Delete Account</h3>
-            <p class="muted settings-desc">This permanently deletes your account, tokens, and all Blooks. This cannot be undone.</p>
-            <label class="settings-label">Type your username to confirm</label>
-            <input type="text" id="deleteConfirm" placeholder="Username" class="settings-input" />
-            <label class="settings-label">Password</label>
-            <input type="password" id="deletePass" placeholder="Password" class="settings-input" />
+            <label class="settings-label">Username</label><input type="text" id="deleteConfirm" class="settings-input" />
+            <label class="settings-label">Password</label><input type="password" id="deletePass" class="settings-input" />
             <p class="settings-msg" id="deleteMsg"></p>
             <button class="btn btn-sm btn-danger" onclick="deleteAccount()">Delete My Account</button>
           </div>
@@ -150,97 +119,12 @@
       </section>
     </main>
   </div>
-
-  <div class="modal-bg" id="loginModal">
-    <div class="modal">
-      <h2>Log In</h2>
-      <label>Username</label><input type="text" id="loginUser" placeholder="Username" autocomplete="username" />
-      <label>Password</label><input type="password" id="loginPass" placeholder="Password" autocomplete="current-password" />
-      <p class="error" id="loginErr"></p>
-      <button class="btn btn-green full" onclick="doLogin()">Log In</button>
-      <p class="switch">No account? <a href="#" onclick="closeModals(); openRegister(); return false;">Register</a></p>
-    </div>
-  </div>
-
-  <div class="modal-bg" id="regModal">
-    <div class="modal">
-      <h2>Register</h2>
-      <label>Username</label><input type="text" id="regUser" placeholder="3–20 characters" autocomplete="username" />
-      <label>Password</label><input type="password" id="regPass" placeholder="At least 4 characters" autocomplete="new-password" />
-      <label>Confirm Password</label><input type="password" id="regPass2" placeholder="Confirm password" autocomplete="new-password" />
-      <p class="error" id="regErr"></p>
-      <button class="btn btn-purple full" onclick="doRegister()">Create Account</button>
-      <p class="switch">Have an account? <a href="#" onclick="closeModals(); openLogin(); return false;">Log in</a></p>
-    </div>
-  </div>
-
-  <div class="modal-bg" id="openModal">
-    <div class="modal open-modal">
-      <h2 id="openTitle">You got…</h2>
-      <img id="openImg" src="" alt="" class="open-img" />
-      <div class="open-name" id="openName">—</div>
-      <div class="open-rarity" id="openRarity">—</div>
-      <div class="open-auto-count muted" id="openAutoCount" style="display:none"></div>
-      <button class="btn btn-green full" id="openOkBtn" onclick="closeOpen()">Nice!</button>
-    </div>
-  </div>
-
-  <div class="modal-bg" id="blookActionModal">
-    <div class="modal">
-      <h2 id="baTitle">Blook</h2>
-      <img id="baImg" src="" alt="" class="open-img" />
-      <div class="open-name" id="baName">—</div>
-      <div class="muted" id="baInfo" style="text-align:center;margin-bottom:12px"></div>
-      <div class="ba-section">
-        <strong>Instant sell</strong>
-        <p class="muted" style="margin:6px 0 10px">Sell back to the game for a fixed price</p>
-        <button class="btn btn-sm btn-green full" id="baSellBtn" onclick="confirmInstantSell()">Sell for 0 🪙</button>
-      </div>
-      <div class="ba-section" style="margin-top:18px">
-        <strong>List on Bazaar</strong>
-        <p class="muted" style="margin:6px 0 8px">Set your own price for other players</p>
-        <label class="settings-label">Your price (tokens)</label>
-        <input type="number" id="baListPrice" class="settings-input" min="1" placeholder="Price" />
-        <p class="settings-msg" id="baListMsg"></p>
-        <button class="btn btn-sm btn-purple full" onclick="confirmListBazaar()">List on Bazaar</button>
-      </div>
-      <button class="btn btn-sm btn-ghost full" style="margin-top:14px" onclick="closeBlookAction()">Cancel</button>
-    </div>
-  </div>
-
-  <div class="modal-bg" id="profileModal">
-    <div class="modal profile-modal">
-      <div class="profile-header">
-        <button type="button" class="profile-avatar" id="profileAvatarBtn" title="Change avatar">
-          <img id="profileAvatarImg" src="" alt="" style="display:none" />
-          <span id="profileAvatarLetter">?</span>
-        </button>
-        <div>
-          <h2 id="profileName">—</h2>
-          <p class="muted" id="profileSubtitle">Level 1</p>
-          <div class="profile-badges" id="profileBadges"></div>
-        </div>
-      </div>
-      <h3 class="profile-section-title">Stats</h3>
-      <div class="profile-stats" id="profileStats"></div>
-      <h3 class="profile-section-title">Collection</h3>
-      <div class="profile-blooks" id="profileBlooks"></div>
-      <h3 class="profile-section-title">Bazaar listings</h3>
-      <div class="profile-listings" id="profileListings"></div>
-      <button class="btn btn-sm btn-ghost full" style="margin-top:16px" onclick="closeProfile()">Close</button>
-    </div>
-  </div>
-
-  <div class="modal-bg" id="equipModal">
-    <div class="modal profile-modal">
-      <h2>Equip Avatar</h2>
-      <p class="muted" style="text-align:center;margin-bottom:12px">Pick a Blook from your collection</p>
-      <div class="equip-grid" id="equipGrid"></div>
-      <button class="btn btn-sm btn-ghost full" style="margin-top:14px" onclick="unequipBlook()">Use letter avatar</button>
-      <button class="btn btn-sm btn-ghost full" style="margin-top:8px" onclick="closeEquipModal()">Cancel</button>
-    </div>
-  </div>
-
+  <div class="modal-bg" id="loginModal"><div class="modal"><h2>Log In</h2><label>Username</label><input type="text" id="loginUser" /><label>Password</label><input type="password" id="loginPass" /><p class="error" id="loginErr"></p><button class="btn btn-green full" onclick="doLogin()">Log In</button></div></div>
+  <div class="modal-bg" id="regModal"><div class="modal"><h2>Register</h2><label>Username</label><input type="text" id="regUser" /><label>Password</label><input type="password" id="regPass" /><label>Confirm</label><input type="password" id="regPass2" /><p class="error" id="regErr"></p><button class="btn btn-purple full" onclick="doRegister()">Create Account</button></div></div>
+  <div class="modal-bg" id="openModal"><div class="modal open-modal"><h2 id="openTitle">You got…</h2><img id="openImg" class="open-img" /><div class="open-name" id="openName">—</div><div class="open-rarity" id="openRarity">—</div><div class="open-auto-count muted" id="openAutoCount" style="display:none"></div><button class="btn btn-green full" id="openOkBtn" onclick="closeOpen()">Nice!</button></div></div>
+  <div class="modal-bg" id="blookActionModal"><div class="modal"><h2 id="baTitle">Blook</h2><img id="baImg" class="open-img" /><div class="open-name" id="baName">—</div><div class="muted" id="baInfo" style="text-align:center;margin-bottom:12px"></div><div class="ba-section"><strong>Instant sell</strong><button class="btn btn-sm btn-green full" id="baSellBtn" onclick="confirmInstantSell()">Sell</button></div><div class="ba-section" style="margin-top:18px"><strong>List on Bazaar</strong><label class="settings-label">Price</label><input type="number" id="baListPrice" class="settings-input" min="1" /><p class="settings-msg" id="baListMsg"></p><button class="btn btn-sm btn-purple full" onclick="confirmListBazaar()">List on Bazaar</button></div><button class="btn btn-sm btn-ghost full" style="margin-top:14px" onclick="closeBlookAction()">Cancel</button></div></div>
+  <div class="modal-bg" id="profileModal"><div class="modal profile-modal"><div class="profile-header"><button type="button" class="profile-avatar" id="profileAvatarBtn"><img id="profileAvatarImg" style="display:none" /><span id="profileAvatarLetter">?</span></button><div><h2 id="profileName">—</h2><p class="muted" id="profileSubtitle">Level 1</p><div class="profile-badges" id="profileBadges"></div></div></div><h3 class="profile-section-title">Stats</h3><div class="profile-stats" id="profileStats"></div><h3 class="profile-section-title">Collection</h3><div class="profile-blooks" id="profileBlooks"></div><h3 class="profile-section-title">Bazaar listings</h3><div class="profile-listings" id="profileListings"></div><button class="btn btn-sm btn-ghost full" style="margin-top:16px" onclick="closeProfile()">Close</button></div></div>
+  <div class="modal-bg" id="equipModal"><div class="modal profile-modal"><h2>Equip Avatar</h2><p class="muted" style="text-align:center;margin-bottom:12px">Pick a Blook</p><div class="equip-grid" id="equipGrid"></div><button class="btn btn-sm btn-ghost full" style="margin-top:14px" onclick="unequipBlook()">Use letter avatar</button><button class="btn btn-sm btn-ghost full" style="margin-top:8px" onclick="closeEquipModal()">Cancel</button></div></div>
   <script src="catalog.js"></script>
   <script src="app.js"></script>
 </body>
