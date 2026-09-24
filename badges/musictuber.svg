@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" width="140" height="140">
+  <circle cx="70" cy="70" r="66" fill="#0d0d0d" stroke="#e53935" stroke-width="6"/>
+  <circle cx="70" cy="62" r="28" fill="#e53935"/>
+  <path d="M42 58 Q42 40 70 40 Q98 40 98 58 L98 72 Q98 90 70 90 Q42 90 42 72 Z" fill="#fff"/>
+  <circle cx="55" cy="62" r="8" fill="#0d0d0d"/>
+  <circle cx="85" cy="62" r="8" fill="#0d0d0d"/>
+  <path d="M62 70 Q70 78 78 70" stroke="#0d0d0d" stroke-width="3" fill="none"/>
+  <rect x="30" y="98" width="80" height="22" rx="4" fill="#fff" stroke="#e53935" stroke-width="2"/>
+  <text x="70" y="114" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="11" font-weight="800" fill="#0d0d0d">MUSIC YT</text>
+</svg>
