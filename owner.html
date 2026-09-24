@@ -2,11 +2,233 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0;url=/co-owner.html" />
-  <title>Redirect</title>
-  <script>location.replace("/co-owner.html");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Musiclet Owner</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body { min-height: 100vh; }
+    .owner-wrap { max-width: 560px; margin: 0 auto; padding: 24px 16px 48px; }
+    .owner-wrap h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; color: #1a3a5c; }
+    .owner-gate, .owner-panel { display: none; }
+    .owner-gate.show, .owner-panel.show { display: block; }
+    .owner-card { margin-bottom: 16px; }
+    .owner-card h3 { margin-bottom: 10px; }
+    .owner-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .owner-row .settings-input { flex: 1; min-width: 120px; }
+    .owner-msg { margin-top: 8px; font-size: 13px; font-weight: 600; min-height: 18px; }
+    .owner-msg.ok { color: #2e7d32; }
+    .owner-msg.err { color: #c62828; }
+    .user-list { max-height: 160px; overflow-y: auto; margin-top: 8px; font-size: 13px; }
+    .user-list div { padding: 4px 0; border-bottom: 1px solid rgba(0,80,140,0.08); }
+    .badge { display: inline-block; background: #0288d1; color: #fff; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; margin-left: 8px; vertical-align: middle; }
+  </style>
 </head>
 <body>
-  <p><a href="/co-owner.html">Go to Co-owner panel</a></p>
+  <div style="min-height:100vh">
+    <div class="owner-wrap">
+      <h1>Owner Panel <span class="badge">OWNER</span></h1>
+      <p class="muted" style="margin-bottom:20px">Restricted — enter the owner code</p>
+
+      <div class="card owner-gate show" id="gate">
+        <label class="settings-label">Owner code</label>
+        <input type="password" id="ownerCode" class="settings-input" placeholder="Enter code" autocomplete="off" />
+        <p class="owner-msg" id="gateMsg"></p>
+        <button type="button" class="btn btn-green btn-sm" id="unlockBtn">Unlock</button>
+        <p style="margin-top:14px"><a href="/" style="color:#0288d1;font-weight:700;text-decoration:none">← Back to Musiclet</a></p>
+      </div>
+
+      <div class="owner-panel" id="panel">
+        <div class="card owner-card">
+          <h3>Registered users</h3>
+          <div class="user-list" id="userList">—</div>
+          <button type="button" class="btn btn-sm btn-ghost" style="margin-top:8px" id="refreshBtn">Refresh</button>
+        </div>
+
+        <div class="card owner-card">
+          <h3>Add / remove tokens</h3>
+          <label class="settings-label">Username</label>
+          <input type="text" id="tokUser" class="settings-input" placeholder="Username" />
+          <label class="settings-label">Amount</label>
+          <input type="number" id="tokAmount" class="settings-input" placeholder="e.g. 5000" />
+          <div class="owner-row">
+            <button type="button" class="btn btn-sm btn-green" id="addTokBtn">Add tokens</button>
+            <button type="button" class="btn btn-sm btn-danger" id="remTokBtn">Remove tokens</button>
+          </div>
+          <p class="owner-msg" id="tokMsg"></p>
+        </div>
+
+        <div class="card owner-card">
+          <h3>Add / remove Blook</h3>
+          <label class="settings-label">Username</label>
+          <input type="text" id="blUser" class="settings-input" placeholder="Username" />
+          <label class="settings-label">Blook name</label>
+          <input type="text" id="blName" class="settings-input" list="blookList" placeholder="Exact blook name" />
+          <datalist id="blookList"></datalist>
+          <label class="settings-label">Quantity</label>
+          <input type="number" id="blQty" class="settings-input" value="1" min="1" />
+          <div class="owner-row">
+            <button type="button" class="btn btn-sm btn-green" id="addBlBtn">Add blook</button>
+            <button type="button" class="btn btn-sm btn-danger" id="remBlBtn">Remove blook</button>
+          </div>
+          <p class="owner-msg" id="blMsg"></p>
+        </div>
+
+        <div class="card owner-card settings-danger">
+          <h3>Clear Bazaar</h3>
+          <p class="muted" style="margin-bottom:12px">Removes every listing. Blooks are not returned to sellers.</p>
+          <button type="button" class="btn btn-sm btn-danger" id="clearBzBtn">Clear entire Bazaar</button>
+          <p class="owner-msg" id="bzMsg"></p>
+        </div>
+
+        <p style="margin-top:8px"><a href="/" style="color:#0288d1;font-weight:700;text-decoration:none">← Back to Musiclet</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="catalog.js"></script>
+  <script>
+(function () {
+  var PANEL_CODE = "hibro122300318";
+  var SESSION_KEY = "ml_owner";
+
+  function safeGet(k, f) {
+    try { return localStorage.getItem(k) || f; } catch (e) { return f; }
+  }
+  function safeSet(k, v) {
+    try { localStorage.setItem(k, v); return true; } catch (e) { return false; }
+  }
+  function getUsers() {
+    try { return JSON.parse(safeGet("ml_users", "{}")); } catch (e) { return {}; }
+  }
+  function defaultData() {
+    return {
+      tokens: (typeof CATALOG !== "undefined" && CATALOG.startTokens) || 1500,
+      exp: 0, packsOpened: 0, inventory: {}, lastClaim: ""
+    };
+  }
+  function getData(u) {
+    try {
+      return Object.assign(defaultData(), JSON.parse(safeGet("ml_data_" + u, "{}")));
+    } catch (e) { return defaultData(); }
+  }
+  function saveData(u, d) { safeSet("ml_data_" + u, JSON.stringify(d)); }
+  function resolveUser(name) {
+    var users = getUsers();
+    var u = users[(name || "").trim().toLowerCase()];
+    return u ? u.username : null;
+  }
+  function setMsg(id, text, ok) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text || "";
+    el.className = "owner-msg " + (ok ? "ok" : "err");
+  }
+  function showPanel() {
+    var gate = document.getElementById("gate");
+    var panel = document.getElementById("panel");
+    if (gate) gate.classList.remove("show");
+    if (panel) panel.classList.add("show");
+    refreshUsers();
+    fillBlookList();
+  }
+  function tryUnlock() {
+    var input = document.getElementById("ownerCode");
+    var code = (input && input.value ? input.value : "").trim();
+    if (code !== PANEL_CODE) {
+      setMsg("gateMsg", "Wrong code", false);
+      return;
+    }
+    try { sessionStorage.setItem(SESSION_KEY, "1"); } catch (e) {}
+    setMsg("gateMsg", "Unlocked", true);
+    showPanel();
+  }
+  function fillBlookList() {
+    var dl = document.getElementById("blookList");
+    if (!dl || typeof CATALOG === "undefined" || !CATALOG.blooks) return;
+    dl.innerHTML = CATALOG.blooks.map(function (b) {
+      return "<option value=\"" + String(b.name).replace(/\"/g, "") + "\"></option>";
+    }).join("");
+  }
+  function refreshUsers() {
+    var el = document.getElementById("userList");
+    if (!el) return;
+    var users = getUsers();
+    var names = Object.keys(users).map(function (k) { return users[k].username; })
+      .sort(function (a, b) { return a.localeCompare(b); });
+    if (!names.length) {
+      el.textContent = "No users yet (accounts are per-browser)";
+      return;
+    }
+    el.innerHTML = names.map(function (n) {
+      var d = getData(n);
+      var types = Object.keys(d.inventory || {}).filter(function (k) { return d.inventory[k] > 0; }).length;
+      return "<div><strong>" + n + "</strong> — " + d.tokens.toLocaleString() + " 🪙 · " + types + " types</div>";
+    }).join("");
+  }
+  function adminTokens(sign) {
+    var name = resolveUser(document.getElementById("tokUser").value);
+    var amount = Math.floor(Number(document.getElementById("tokAmount").value) || 0);
+    if (!name) { setMsg("tokMsg", "User not found on this browser", false); return; }
+    if (amount < 1) { setMsg("tokMsg", "Amount must be at least 1", false); return; }
+    var d = getData(name);
+    if (sign > 0) {
+      d.tokens += amount;
+      saveData(name, d);
+      setMsg("tokMsg", "Added " + amount.toLocaleString() + " 🪙 to " + name + " (now " + d.tokens.toLocaleString() + ")", true);
+    } else {
+      d.tokens = Math.max(0, d.tokens - amount);
+      saveData(name, d);
+      setMsg("tokMsg", "Removed tokens from " + name + " (now " + d.tokens.toLocaleString() + ")", true);
+    }
+    refreshUsers();
+  }
+  function adminBlook(sign) {
+    var name = resolveUser(document.getElementById("blUser").value);
+    var blook = (document.getElementById("blName").value || "").trim();
+    var qty = Math.max(1, Math.floor(Number(document.getElementById("blQty").value) || 1));
+    if (!name) { setMsg("blMsg", "User not found on this browser", false); return; }
+    if (!blook) { setMsg("blMsg", "Enter a blook name", false); return; }
+    var exists = typeof CATALOG !== "undefined" && CATALOG.blooks &&
+      CATALOG.blooks.some(function (b) { return b.name === blook; });
+    if (!exists) { setMsg("blMsg", "Unknown blook name (check spelling)", false); return; }
+    var d = getData(name);
+    if (sign > 0) {
+      d.inventory[blook] = (d.inventory[blook] || 0) + qty;
+      saveData(name, d);
+      setMsg("blMsg", "Added " + qty + "× " + blook + " to " + name, true);
+    } else {
+      var have = d.inventory[blook] || 0;
+      if (have < 1) { setMsg("blMsg", name + " doesn't own that blook", false); return; }
+      d.inventory[blook] = Math.max(0, have - qty);
+      if (d.inventory[blook] <= 0) delete d.inventory[blook];
+      saveData(name, d);
+      setMsg("blMsg", "Removed blook(s) from " + name, true);
+    }
+    refreshUsers();
+  }
+  function clearBazaar() {
+    if (!confirm("Clear ALL bazaar listings? This cannot be undone.")) return;
+    safeSet("ml_bazaar", "[]");
+    setMsg("bzMsg", "Bazaar cleared", true);
+  }
+  function bind() {
+    var unlockBtn = document.getElementById("unlockBtn");
+    var codeInput = document.getElementById("ownerCode");
+    if (unlockBtn) unlockBtn.onclick = tryUnlock;
+    if (codeInput) codeInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") tryUnlock();
+    });
+    var r = document.getElementById("refreshBtn"); if (r) r.onclick = refreshUsers;
+    var a = document.getElementById("addTokBtn"); if (a) a.onclick = function () { adminTokens(1); };
+    var b = document.getElementById("remTokBtn"); if (b) b.onclick = function () { adminTokens(-1); };
+    var c = document.getElementById("addBlBtn"); if (c) c.onclick = function () { adminBlook(1); };
+    var d = document.getElementById("remBlBtn"); if (d) d.onclick = function () { adminBlook(-1); };
+    var e = document.getElementById("clearBzBtn"); if (e) e.onclick = clearBazaar;
+    try { if (sessionStorage.getItem(SESSION_KEY) === "1") showPanel(); } catch (err) {}
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bind);
+  else bind();
+})();
+  </script>
 </body>
 </html>
