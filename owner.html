@@ -73,6 +73,20 @@
           <p class="owner-msg" id="blMsg"></p>
         </div>
 
+        <div class="card owner-card">
+          <h3>Custom player PFP</h3>
+          <p class="muted" style="margin-bottom:10px;font-size:13px">Upload an image and set it as a player's profile picture</p>
+          <label class="settings-label">Username</label>
+          <input type="text" id="pfpUser" class="settings-input" placeholder="Username" />
+          <label class="settings-label">Image</label>
+          <input type="file" id="pfpFile" class="settings-input" accept="image/*" />
+          <div class="owner-row">
+            <button type="button" class="btn btn-sm btn-green" id="setPfpBtn">Set custom PFP</button>
+            <button type="button" class="btn btn-sm btn-danger" id="clearPfpBtn">Clear custom PFP</button>
+          </div>
+          <p class="owner-msg" id="pfpMsg"></p>
+        </div>
+
         <div class="card owner-card settings-danger">
           <h3>Clear Bazaar</h3>
           <p class="muted" style="margin-bottom:12px">Removes every listing. Blooks are not returned to sellers.</p>
@@ -103,7 +117,7 @@
   function defaultData() {
     return {
       tokens: (typeof CATALOG !== "undefined" && CATALOG.startTokens) || 1500,
-      exp: 0, packsOpened: 0, inventory: {}, lastClaim: ""
+      exp: 0, packsOpened: 0, inventory: {}, lastClaim: "", equipped: null, customPfp: null
     };
   }
   function getData(u) {
@@ -162,7 +176,8 @@
     el.innerHTML = names.map(function (n) {
       var d = getData(n);
       var types = Object.keys(d.inventory || {}).filter(function (k) { return d.inventory[k] > 0; }).length;
-      return "<div><strong>" + n + "</strong> — " + d.tokens.toLocaleString() + " 🪙 · " + types + " types</div>";
+      return "<div><strong>" + n + "</strong> — " + d.tokens.toLocaleString() + " 🪙 · " + types + " types" +
+        (d.customPfp ? " · custom pfp" : "") + "</div>";
     }).join("");
   }
   function adminTokens(sign) {
@@ -211,6 +226,76 @@
     safeSet("ml_bazaar", "[]");
     setMsg("bzMsg", "Bazaar cleared", true);
   }
+
+  function fileToDataUrl(file, maxSize, cb) {
+    if (!file || !file.type || file.type.indexOf("image/") !== 0) {
+      cb(null, "Please choose an image file");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      cb(null, "Image must be under 2MB");
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function () {
+      var img = new Image();
+      img.onload = function () {
+        var max = maxSize || 256;
+        var w = img.width, h = img.height;
+        var scale = Math.min(1, max / Math.max(w, h));
+        var cw = Math.max(1, Math.round(w * scale));
+        var ch = Math.max(1, Math.round(h * scale));
+        var canvas = document.createElement("canvas");
+        canvas.width = cw;
+        canvas.height = ch;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, cw, ch);
+        var data;
+        try {
+          data = canvas.toDataURL("image/jpeg", 0.85);
+        } catch (e) {
+          cb(null, "Could not process image");
+          return;
+        }
+        if (data.length > 400000) {
+          data = canvas.toDataURL("image/jpeg", 0.6);
+        }
+        cb(data, null);
+      };
+      img.onerror = function () { cb(null, "Invalid image"); };
+      img.src = reader.result;
+    };
+    reader.onerror = function () { cb(null, "Could not read file"); };
+    reader.readAsDataURL(file);
+  }
+
+  function setCustomPfp() {
+    var name = resolveUser(document.getElementById("pfpUser").value);
+    var fileInput = document.getElementById("pfpFile");
+    if (!name) { setMsg("pfpMsg", "User not found on this browser", false); return; }
+    var file = fileInput && fileInput.files && fileInput.files[0];
+    if (!file) { setMsg("pfpMsg", "Choose an image first", false); return; }
+    fileToDataUrl(file, 256, function (data, err) {
+      if (err || !data) { setMsg("pfpMsg", err || "Failed", false); return; }
+      var d = getData(name);
+      d.customPfp = data;
+      saveData(name, d);
+      setMsg("pfpMsg", "Custom PFP set for " + name, true);
+      if (fileInput) fileInput.value = "";
+      refreshUsers();
+    });
+  }
+
+  function clearCustomPfp() {
+    var name = resolveUser(document.getElementById("pfpUser").value);
+    if (!name) { setMsg("pfpMsg", "User not found on this browser", false); return; }
+    var d = getData(name);
+    d.customPfp = null;
+    saveData(name, d);
+    setMsg("pfpMsg", "Cleared custom PFP for " + name, true);
+    refreshUsers();
+  }
+
   function bind() {
     var unlockBtn = document.getElementById("unlockBtn");
     var codeInput = document.getElementById("ownerCode");
@@ -224,6 +309,8 @@
     var c = document.getElementById("addBlBtn"); if (c) c.onclick = function () { adminBlook(1); };
     var d = document.getElementById("remBlBtn"); if (d) d.onclick = function () { adminBlook(-1); };
     var e = document.getElementById("clearBzBtn"); if (e) e.onclick = clearBazaar;
+    var sp = document.getElementById("setPfpBtn"); if (sp) sp.onclick = setCustomPfp;
+    var cp = document.getElementById("clearPfpBtn"); if (cp) cp.onclick = clearCustomPfp;
     try { if (sessionStorage.getItem(SESSION_KEY) === "1") showPanel(); } catch (err) {}
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bind);
