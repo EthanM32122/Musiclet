@@ -6,6 +6,7 @@
   <title>Musiclet</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="badge-styles.css" />
+  <link rel="stylesheet" href="token.css" />
 </head>
 <body>
   <div id="landing" class="screen active">
@@ -23,7 +24,7 @@
     <header class="topbar">
       <div class="topbar-left"><div class="logo-box mini"><div class="logo-m">M</div></div><span class="brand">Musiclet</span></div>
       <div class="topbar-right">
-        <span class="token-pill">🪙 <span id="tokenCount">0</span></span>
+        <span class="token-pill"><span class="token-icon" aria-hidden="true"></span><span id="tokenCount">0</span></span>
         <button type="button" class="pfp-btn" id="pfpBtn" onclick="openEquipModal()" title="Change avatar">
           <img id="pfpImg" src="" alt="" style="display:none" /><span id="pfpLetter">?</span>
         </button>
@@ -57,7 +58,7 @@
         </div>
         <div class="card claim-card">
           <div><strong>Daily Claim</strong><p class="muted">Get free tokens every day</p></div>
-          <button class="btn btn-green" id="claimBtn" onclick="claimDaily()">Claim 4000 🪙</button>
+          <button class="btn btn-green" id="claimBtn" onclick="claimDaily()">Claim 4000 <span class="token-icon"></span></button>
         </div>
       </section>
       <section id="page-market" class="page">
@@ -85,7 +86,7 @@
         <div class="page-head"><h1>Settings</h1><span class="muted">Manage account</span></div>
         <div class="settings-stack">
           <div class="card settings-card">
-            <h3>🪙 Token Trade</h3>
+            <h3><span class="token-icon"></span> Token Trade</h3>
             <label class="settings-label">Username</label><input type="text" id="tradeUser" class="settings-input" />
             <label class="settings-label">Amount</label><input type="number" id="tradeAmount" class="settings-input" min="1" />
             <label class="settings-label">Password</label><input type="password" id="tradePass" class="settings-input" />
