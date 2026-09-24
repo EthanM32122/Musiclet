@@ -504,6 +504,7 @@ function renderBazaar() {
       card.innerHTML =
         '<img src="' + (L.img || "") + '" alt="" onerror="this.style.opacity=0.3">' +
         '<div class="bz-name">' + L.blook + "</div>" +
+        '<div class="bz-pack muted">' + (L.pack || "") + " Pack</div>" +
         '<div class="bz-rarity">' + (L.rarity || "") + "</div>" +
         '<div class="bz-price">' + L.price.toLocaleString() + " 🪙</div>" +
         '<div class="bz-seller muted">by <a href="#" class="profile-link">' + L.seller + "</a></div>" +
