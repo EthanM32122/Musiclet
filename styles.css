@@ -461,6 +461,72 @@ body {
   opacity: 1;
 }
 
+/* Bazaar */
+.bazaar-controls {
+  margin-bottom: 20px;
+  padding: 16px;
+}
+.bazaar-controls .settings-input {
+  margin-bottom: 12px;
+}
+.bazaar-controls .rarity-bar {
+  margin-bottom: 0;
+}
+
+.bazaar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 14px;
+}
+
+.bazaar-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 60, 100, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.bazaar-card img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.bz-name {
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--text);
+}
+.bz-rarity {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.bz-price {
+  font-weight: 900;
+  color: #e65100;
+  font-size: 15px;
+  margin: 4px 0;
+}
+.bz-seller {
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.bazaar-card .btn-pack {
+  width: 100%;
+}
+
+.ba-section {
+  border-top: 1px solid #eee;
+  padding-top: 14px;
+}
+
 /* Settings */
 .settings-stack {
   display: flex;
@@ -544,6 +610,8 @@ body {
   max-width: 380px;
   box-shadow: 0 24px 60px rgba(0,0,0,0.25);
   animation: slideUp 0.3s ease;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal h2 {
@@ -606,7 +674,7 @@ body {
   margin: 12px auto;
   display: block;
 }
-.open-name { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.open-name { font-size: 22px; font-weight: 800; margin-bottom: 6px; text-align: center; }
 .open-rarity { font-weight: 700; margin-bottom: 8px; }
 .open-auto-count {
   font-size: 13px;
