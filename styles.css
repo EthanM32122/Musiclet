@@ -21,7 +21,6 @@ body {
   min-height: 100vh;
 }
 
-/* Light blue checkered — matches reference image, all pages */
 #landing,
 #app {
   background:
@@ -143,12 +142,14 @@ body {
 }
 .btn-ghost:hover { background: rgba(255,255,255,0.85); color: var(--text); filter: none; }
 
-.btn-stop {
+.btn-stop,
+.btn-danger {
   background: linear-gradient(180deg, #ef5350, #c62828);
   box-shadow: 0 3px 0 #8e0000;
   color: #fff;
 }
-.btn-stop:hover { filter: brightness(1.1); }
+.btn-stop:hover,
+.btn-danger:hover { filter: brightness(1.1); }
 
 .topbar {
   display: flex;
@@ -430,6 +431,67 @@ body {
   padding: 1px 6px;
   border-radius: 6px;
   color: #ffd54f;
+}
+
+/* Settings */
+.settings-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+}
+
+.settings-card h3 {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.settings-desc {
+  margin-bottom: 14px;
+}
+
+.settings-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 10px 0 6px;
+}
+
+.settings-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 2px solid #e0e8f0;
+  border-radius: 12px;
+  font-size: 15px;
+  outline: none;
+  background: #f8fafc;
+  color: var(--text);
+}
+
+.settings-input:focus {
+  border-color: #26c6da;
+  box-shadow: 0 0 0 3px rgba(38,198,218,0.2);
+  background: #fff;
+}
+
+.settings-msg {
+  font-size: 13px;
+  min-height: 18px;
+  margin: 10px 0;
+}
+
+.settings-msg.ok { color: #2e7d32; font-weight: 600; }
+.settings-msg.err { color: #c62828; font-weight: 600; }
+
+.settings-danger {
+  border-color: rgba(198, 40, 40, 0.25);
+}
+
+.settings-danger h3 {
+  color: #c62828;
 }
 
 .modal-bg {
