@@ -36,7 +36,7 @@ function getUsers() {
 }
 function currentUser() { return safeGet("ml_current", ""); }
 function defaultData() {
-  return { tokens: CATALOG.startTokens || 1500, exp: 0, packsOpened: 0, inventory: {}, lastClaim: "", equipped: null };
+  return { tokens: CATALOG.startTokens || 1500, exp: 0, packsOpened: 0, inventory: {}, lastClaim: "", equipped: null, customPfp: null };
 }
 function getData(u) {
   try { return Object.assign(defaultData(), JSON.parse(safeGet("ml_data_" + u, "{}"))); }
@@ -629,13 +629,15 @@ function updatePfp(username) {
   if (!u) return;
   const d = getData(u);
   const letter = (u.charAt(0) || "?").toUpperCase();
+  const custom = d.customPfp;
   const eq = d.equipped;
-  const b = eq ? blookByName[eq] : null;
+  const b = (!custom && eq) ? blookByName[eq] : null;
+  const src = custom || (b ? b.img : null);
   const pfpImg = document.getElementById("pfpImg");
   const pfpLetter = document.getElementById("pfpLetter");
   if (pfpImg && pfpLetter) {
-    if (b) {
-      pfpImg.src = b.img;
+    if (src) {
+      pfpImg.src = src;
       pfpImg.style.display = "block";
       pfpLetter.style.display = "none";
     } else {
@@ -648,14 +650,16 @@ function updatePfp(username) {
 
 function setProfileAvatar(username, d, isMe) {
   const letter = (username.charAt(0) || "?").toUpperCase();
+  const custom = d.customPfp;
   const eq = d.equipped;
-  const b = eq ? blookByName[eq] : null;
+  const b = (!custom && eq) ? blookByName[eq] : null;
+  const src = custom || (b ? b.img : null);
   const img = document.getElementById("profileAvatarImg");
   const letEl = document.getElementById("profileAvatarLetter");
   const btn = document.getElementById("profileAvatarBtn");
   if (img && letEl) {
-    if (b) {
-      img.src = b.img;
+    if (src) {
+      img.src = src;
       img.style.display = "block";
       letEl.style.display = "none";
     } else {
@@ -783,6 +787,7 @@ function equipBlook(name) {
   const d = getData(u);
   if ((d.inventory[name] || 0) < 1) return;
   d.equipped = name;
+  d.customPfp = null;
   saveData(u, d);
   updatePfp(u);
   closeEquipModal();
