@@ -3,6 +3,17 @@ const PACKS = CATALOG.packs;
 const RARITIES = CATALOG.rarities;
 const blookByName = Object.fromEntries(BLOOKS.map(b => [b.name, b]));
 
+// Sell prices by rarity (tokens)
+const SELL_PRICES = {
+  Common: 1,
+  Uncommon: 5,
+  Rare: 20,
+  Epic: 75,
+  Legendary: 200,
+  Chroma: 1000,
+  Mystical: 2500
+};
+
 let rarityFilter = "all";
 let autoRunning = false;
 let autoPack = null;
@@ -46,6 +57,12 @@ function saveData(u, d) {
 
 function levelForExp(exp) {
   return Math.floor(Math.sqrt(exp / 100)) + 1;
+}
+
+function sellPrice(blookName) {
+  const b = blookByName[blookName];
+  if (!b) return 1;
+  return SELL_PRICES[b.rarity] || 5;
 }
 
 // ===== AUTH =====
@@ -217,7 +234,6 @@ function changeUsername() {
     return;
   }
 
-  // Move account data
   const data = getData(u);
   delete users[key];
   users[newName.toLowerCase()] = { username: newName, password: pass };
@@ -454,7 +470,29 @@ function updateAutoBar() {
   }
 }
 
-// ===== BLOOKS =====
+// ===== BLOOKS + SELL =====
+function sellBlook(name) {
+  const u = currentUser();
+  if (!u) return;
+  const d = getData(u);
+  const qty = d.inventory[name] || 0;
+  if (qty < 1) return;
+
+  const price = sellPrice(name);
+  const b = blookByName[name];
+  const rarity = b ? b.rarity : "?";
+
+  if (!confirm("Sell 1× " + name + " (" + rarity + ") for " + price + " 🪙?")) {
+    return;
+  }
+
+  d.inventory[name] = qty - 1;
+  if (d.inventory[name] <= 0) delete d.inventory[name];
+  d.tokens += price;
+  saveData(u, d);
+  refreshUI();
+}
+
 function renderBlooks() {
   const bar = document.getElementById("rarityBar");
   if (bar && !bar.dataset.ready) {
@@ -491,13 +529,19 @@ function renderBlooks() {
 
     blooks.forEach(b => {
       const qty = d.inventory[b.name] || 0;
+      const price = sellPrice(b.name);
       const slot = document.createElement("div");
-      slot.className = "blook-slot " + (qty > 0 ? "owned" : "locked");
-      slot.title = b.name + (qty ? " ×" + qty : " (locked)");
+      slot.className = "blook-slot " + (qty > 0 ? "owned sellable" : "locked");
+      slot.title = qty > 0
+        ? b.name + " ×" + qty + " — click to sell for " + price + " 🪙"
+        : b.name + " (locked)";
+
       if (qty > 0) {
         slot.innerHTML =
           '<img src="' + b.img + '" alt="' + b.name + '" loading="lazy" onerror="this.remove()">' +
-          '<span class="qty">' + qty + "</span>";
+          '<span class="qty">' + qty + "</span>" +
+          '<span class="sell-tag">' + price + " 🪙</span>";
+        slot.onclick = () => sellBlook(b.name);
       }
       grid.appendChild(slot);
     });
