@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 56" width="160" height="56">
+  <rect x="28" y="8" width="124" height="40" rx="20" fill="#1565c0"/>
+  <circle cx="28" cy="28" r="26" fill="#0d47a1"/>
+  <path d="M28 12 L32 18 L40 18 L34 24 L36 32 L28 28 L20 32 L22 24 L16 18 L24 18 Z" fill="#ffc107"/>
+  <circle cx="28" cy="34" r="8" fill="#90caf9"/>
+  <text x="95" y="34" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="16" font-weight="800" fill="#fff">ADMIN</text>
+</svg>
