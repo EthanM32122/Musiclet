@@ -33,12 +33,13 @@
         <button class="btn btn-sm btn-ghost" onclick="logout()">Log out</button>
       </div>
     </header>
-    <nav class="nav" id="nav">
-      <button class="nav-item active" data-page="stats" onclick="showPage('stats')">📊 Stats</button>
-      <button class="nav-item" data-page="market" onclick="showPage('market')">🛒 Market</button>
-      <button class="nav-item" data-page="bazaar" onclick="showPage('bazaar')">🏛 Bazaar</button>
-      <button class="nav-item" data-page="blooks" onclick="showPage('blooks')">🎒 My Blooks</button>
-      <button class="nav-item" data-page="settings" onclick="showPage('settings')">⚙ Settings</button>
+    <div class="app-body">
+    <nav class="nav sidebar" id="nav">
+      <button class="nav-item active" data-page="stats" onclick="showPage('stats')"><span class="nav-ico" aria-hidden="true">📊</span><span class="nav-label">Stats</span></button>
+      <button class="nav-item" data-page="market" onclick="showPage('market')"><span class="nav-ico" aria-hidden="true">🏪</span><span class="nav-label">Market</span></button>
+      <button class="nav-item" data-page="blooks" onclick="showPage('blooks')"><span class="nav-ico" aria-hidden="true">🧳</span><span class="nav-label">Blooks</span></button>
+      <button class="nav-item" data-page="bazaar" onclick="showPage('bazaar')"><span class="nav-ico" aria-hidden="true">🔨</span><span class="nav-label">Bazaar</span></button>
+      <button class="nav-item" data-page="settings" onclick="showPage('settings')"><span class="nav-ico" aria-hidden="true">⚙</span><span class="nav-label">Settings</span></button>
     </nav>
     <main class="content">
       <section id="page-stats" class="page active">
@@ -119,6 +120,7 @@
         </div>
       </section>
     </main>
+    </div>
   </div>
   <div class="modal-bg" id="loginModal"><div class="modal"><h2>Log In</h2><label>Username</label><input type="text" id="loginUser" /><label>Password</label><input type="password" id="loginPass" /><p class="error" id="loginErr"></p><button class="btn btn-green full" onclick="doLogin()">Log In</button></div></div>
   <div class="modal-bg" id="regModal"><div class="modal"><h2>Register</h2><label>Username</label><input type="text" id="regUser" /><label>Password</label><input type="password" id="regPass" /><label>Confirm</label><input type="password" id="regPass2" /><p class="error" id="regErr"></p><button class="btn btn-purple full" onclick="doRegister()">Create Account</button></div></div>
