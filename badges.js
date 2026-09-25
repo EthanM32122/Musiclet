@@ -27,6 +27,8 @@ function updateBadgesUI(username) {
   if (!Array.isArray(d.badges)) d.badges = [];
   const el = document.getElementById("userBadges");
   if (el) el.innerHTML = badgeHtml(d.badges, "badge-sm");
+  const sb = document.getElementById("statsBadges");
+  if (sb) sb.innerHTML = badgeHtml(d.badges, "badge-sm");
 }
 
 (function patchBadges() {
