@@ -9,60 +9,86 @@
   <link rel="stylesheet" href="token.css" />
   <style>
     body { min-height: 100vh; color: #1a3a5c; }
-    .gate, .owner-panel { max-width: 560px; margin: 40px auto; padding: 0 16px; }
-    .owner-panel { display: none; }
-    .owner-panel.show { display: block !important; }
-    .gate.hide { display: none !important; }
-    .owner-card { margin-bottom: 16px; }
-    .owner-card h3 { margin-bottom: 10px; font-size: 18px; color: #1a3a5c; }
-    .user-list { font-size: 13px; max-height: 180px; overflow-y: auto; line-height: 1.6; color: #1a3a5c; }
-    .owner-msg { font-size: 13px; min-height: 18px; margin: 8px 0; font-weight: 600; }
-    .owner-msg.ok { color: #2e7d32; }
-    .owner-msg.err { color: #c62828; }
-    .badge-tag { display: inline-block; background: #0288d1; color: #fff; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; margin-left: 8px; }
-    h1 { color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+    .wrap { max-width: 580px; margin: 0 auto; padding: 28px 16px 48px; }
+    #gate { display: block; }
+    #gate.hidden { display: none !important; }
+    #panel { display: none; }
+    #panel.visible { display: block !important; visibility: visible !important; opacity: 1 !important; }
+    .panel-card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      padding: 18px 18px 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.12);
+      color: #1a3a5c;
+    }
+    .panel-card h3 { margin: 0 0 10px; font-size: 17px; color: #1a3a5c; }
+    .user-list { font-size: 13px; max-height: 180px; overflow-y: auto; line-height: 1.55; }
+    .msg { font-size: 13px; min-height: 18px; margin: 8px 0; font-weight: 700; }
+    .msg.ok { color: #2e7d32; }
+    .msg.err { color: #c62828; }
+    .badge-tag {
+      display: inline-block; background: #0288d1; color: #fff;
+      font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; margin-left: 8px;
+      vertical-align: middle;
+    }
+    h1 { color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.25); margin: 0 0 8px; font-size: 28px; }
+    .sub { color: rgba(255,255,255,0.9); margin-bottom: 16px; }
+    .row-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    label.settings-label { color: #5a7a9a; }
+    a.back { color: #fff; font-weight: 700; text-decoration: none; }
   </style>
 </head>
 <body>
-  <div style="min-height:100vh">
-    <div class="gate" id="gate">
+  <div class="wrap">
+    <div id="gate">
       <h1>Co-owner Panel <span class="badge-tag">CO-OWNER</span></h1>
-      <p class="muted" style="margin-bottom:20px;color:rgba(255,255,255,0.85)">Restricted — enter the co-owner code</p>
-      <div class="card">
+      <p class="sub">Enter the access code to unlock tools</p>
+      <div class="panel-card">
         <label class="settings-label">Code</label>
         <input type="password" id="codeInput" class="settings-input" autocomplete="off" />
-        <p class="owner-msg" id="gateMsg"></p>
-        <button type="button" class="btn btn-green full" id="unlockBtn">Unlock</button>
-        <p style="margin-top:14px"><a href="/" style="color:#0288d1;font-weight:700;text-decoration:none">← Back</a></p>
+        <p class="msg" id="gateMsg"></p>
+        <button type="button" class="btn btn-green full" id="unlockBtn" onclick="window.__unlockPanel && window.__unlockPanel()">Unlock</button>
+        <p style="margin-top:14px"><a class="back" href="/">← Back to Musiclet</a></p>
       </div>
     </div>
 
-    <div class="owner-panel" id="panel">
+    <div id="panel">
       <h1>Co-owner Panel <span class="badge-tag">CO-OWNER</span></h1>
-      <div class="card owner-card">
-        <h3>Registered users</h3>
-        <div class="user-list" id="userList">—</div>
+      <p class="sub">All admin tools unlocked</p>
+
+      <div class="panel-card">
+        <h3>1. Registered users</h3>
+        <div class="user-list" id="userList">Loading…</div>
         <button type="button" class="btn btn-sm btn-ghost" style="margin-top:8px" id="refreshBtn">Refresh</button>
       </div>
-      <div class="card owner-card">
-        <h3>Add / remove tokens</h3>
-        <label class="settings-label">Username</label><input type="text" id="tokUser" class="settings-input" />
-        <label class="settings-label">Amount (+ add / − remove)</label><input type="number" id="tokAmt" class="settings-input" />
-        <p class="owner-msg" id="tokMsg"></p>
+
+      <div class="panel-card">
+        <h3>2. Add / remove tokens</h3>
+        <label class="settings-label">Username</label>
+        <input type="text" id="tokUser" class="settings-input" placeholder="exact username" />
+        <label class="settings-label">Amount (+ add / − remove)</label>
+        <input type="number" id="tokAmt" class="settings-input" placeholder="e.g. 500 or -100" />
+        <p class="msg" id="tokMsg"></p>
         <button type="button" class="btn btn-sm btn-green" id="tokBtn">Apply tokens</button>
       </div>
-      <div class="card owner-card">
-        <h3>Add / remove Blook</h3>
-        <label class="settings-label">Username</label><input type="text" id="blUser" class="settings-input" />
-        <label class="settings-label">Blook name</label><input type="text" id="blName" class="settings-input" />
-        <label class="settings-label">Qty (+ add / − remove)</label><input type="number" id="blQty" class="settings-input" value="1" />
-        <p class="owner-msg" id="blMsg"></p>
+
+      <div class="panel-card">
+        <h3>3. Add / remove Blook</h3>
+        <label class="settings-label">Username</label>
+        <input type="text" id="blUser" class="settings-input" />
+        <label class="settings-label">Blook name</label>
+        <input type="text" id="blName" class="settings-input" placeholder="exact blook name" />
+        <label class="settings-label">Qty (+ add / − remove)</label>
+        <input type="number" id="blQty" class="settings-input" value="1" />
+        <p class="msg" id="blMsg"></p>
         <button type="button" class="btn btn-sm btn-green" id="blBtn">Apply blook</button>
       </div>
-      <div class="card owner-card">
-        <h3>Assign badges</h3>
-        <p class="muted" style="margin-bottom:10px;font-size:13px">Give or remove role badges</p>
-        <label class="settings-label">Username</label><input type="text" id="badgeUser" class="settings-input" />
+
+      <div class="panel-card">
+        <h3>4. Assign badges</h3>
+        <label class="settings-label">Username</label>
+        <input type="text" id="badgeUser" class="settings-input" />
         <label class="settings-label">Badge</label>
         <select id="badgeSelect" class="settings-input">
           <option value="owner">Owner</option>
@@ -75,29 +101,37 @@
           <option value="verified">Verified</option>
           <option value="og">OG</option>
         </select>
-        <p class="owner-msg" id="badgeMsg"></p>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+        <p class="msg" id="badgeMsg"></p>
+        <div class="row-btns">
           <button type="button" class="btn btn-sm btn-green" id="addBadgeBtn">Add badge</button>
           <button type="button" class="btn btn-sm btn-danger" id="remBadgeBtn">Remove badge</button>
         </div>
       </div>
-      <div class="card owner-card">
-        <h3>Custom player PFP</h3>
-        <label class="settings-label">Username</label><input type="text" id="pfpUser" class="settings-input" />
-        <label class="settings-label">Image</label><input type="file" id="pfpFile" accept="image/*" class="settings-input" />
-        <p class="owner-msg" id="pfpMsg"></p>
-        <button type="button" class="btn btn-sm btn-green" id="pfpBtn">Set custom PFP</button>
-        <button type="button" class="btn btn-sm btn-ghost" id="clearPfpBtn">Clear custom PFP</button>
+
+      <div class="panel-card">
+        <h3>5. Custom player PFP</h3>
+        <label class="settings-label">Username</label>
+        <input type="text" id="pfpUser" class="settings-input" />
+        <label class="settings-label">Image</label>
+        <input type="file" id="pfpFile" accept="image/*" class="settings-input" />
+        <p class="msg" id="pfpMsg"></p>
+        <div class="row-btns">
+          <button type="button" class="btn btn-sm btn-green" id="pfpBtn">Set custom PFP</button>
+          <button type="button" class="btn btn-sm btn-ghost" id="clearPfpBtn">Clear custom PFP</button>
+        </div>
       </div>
-      <div class="card owner-card">
-        <h3>Clear Bazaar</h3>
-        <p class="muted" style="margin-bottom:10px;font-size:13px">Removes every listing</p>
-        <p class="owner-msg" id="bzMsg"></p>
+
+      <div class="panel-card">
+        <h3>6. Clear Bazaar</h3>
+        <p style="font-size:13px;color:#5a7a9a;margin-bottom:10px">Removes every listing on this device</p>
+        <p class="msg" id="bzMsg"></p>
         <button type="button" class="btn btn-sm btn-danger" id="clearBzBtn">Clear all listings</button>
       </div>
-      <p style="margin:16px 0 40px"><a href="/" style="color:#fff;font-weight:700;text-decoration:none">← Back to Musiclet</a></p>
+
+      <p style="margin-top:12px"><a class="back" href="/">← Back to Musiclet</a></p>
     </div>
   </div>
+
   <script>
 (function () {
   var PANEL_CODE = "122300318mmoopp";
@@ -139,13 +173,17 @@
     var el = document.getElementById(id);
     if (!el) return;
     el.textContent = text || "";
-    el.className = "owner-msg " + (ok ? "ok" : "err");
+    el.className = "msg " + (ok ? "ok" : "err");
   }
   function refreshUsers() {
     var users = loadUsers();
     var names = Object.keys(users).map(function (k) { return users[k].username || k; }).sort();
     var box = document.getElementById("userList");
-    if (!names.length) { box.textContent = "No users yet — register on the main site first"; return; }
+    if (!box) return;
+    if (!names.length) {
+      box.textContent = "No users yet — register on the main site in this browser first";
+      return;
+    }
     box.innerHTML = names.map(function (n) {
       var d = getData(n);
       var badges = (d.badges || []).join(", ") || "none";
@@ -155,15 +193,22 @@
   function showPanel() {
     var gate = document.getElementById("gate");
     var panel = document.getElementById("panel");
-    if (gate) gate.classList.add("hide");
+    if (gate) {
+      gate.classList.add("hidden");
+      gate.style.display = "none";
+    }
     if (panel) {
-      panel.classList.add("show");
+      panel.classList.add("visible");
       panel.style.display = "block";
+      panel.style.visibility = "visible";
+      panel.style.opacity = "1";
     }
     refreshUsers();
+    try { window.scrollTo(0, 0); } catch (e) {}
   }
   function tryUnlock() {
-    var code = (document.getElementById("codeInput").value || "").trim();
+    var input = document.getElementById("codeInput");
+    var code = (input && input.value ? input.value : "").trim();
     if (code === PANEL_CODE) {
       try { sessionStorage.setItem(SESSION_KEY, "1"); } catch (e) {}
       setMsg("gateMsg", "Unlocked!", true);
@@ -172,6 +217,8 @@
       setMsg("gateMsg", "Wrong code", false);
     }
   }
+  window.__unlockPanel = tryUnlock;
+
   function adminTokens() {
     var name = resolveUser(document.getElementById("tokUser").value);
     var amt = parseInt(document.getElementById("tokAmt").value, 10);
@@ -247,8 +294,10 @@
     setMsg("bzMsg", "Bazaar cleared", true);
   }
   function bind() {
-    document.getElementById("unlockBtn").onclick = tryUnlock;
-    document.getElementById("codeInput").addEventListener("keydown", function (e) {
+    var unlockBtn = document.getElementById("unlockBtn");
+    if (unlockBtn) unlockBtn.onclick = tryUnlock;
+    var codeInput = document.getElementById("codeInput");
+    if (codeInput) codeInput.addEventListener("keydown", function (e) {
       if (e.key === "Enter") tryUnlock();
     });
     document.getElementById("refreshBtn").onclick = refreshUsers;
@@ -259,7 +308,9 @@
     document.getElementById("pfpBtn").onclick = setCustomPfp;
     document.getElementById("clearPfpBtn").onclick = clearCustomPfp;
     document.getElementById("clearBzBtn").onclick = clearBazaar;
-    try { if (sessionStorage.getItem(SESSION_KEY) === "1") showPanel(); } catch (e) {}
+    try {
+      if (sessionStorage.getItem(SESSION_KEY) === "1") showPanel();
+    } catch (e) {}
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bind);
   else bind();
