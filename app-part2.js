@@ -3,12 +3,17 @@ function confirmInstantSell() {
   const name = actionBlook;
   const u = currentUser();
   const d = getData(u);
-  if ((d.inventory[name] || 0) < 1) { closeBlookAction(); return; }
-  const price = sellPrice(name);
-  d.inventory[name] -= 1;
+  const owned = d.inventory[name] || 0;
+  if (owned < 1) { closeBlookAction(); return; }
+  let qty = Math.floor(Number((document.getElementById("baSellQty") || {}).value) || 1);
+  if (qty < 1) qty = 1;
+  if (qty > owned) qty = owned;
+  const unit = sellPrice(name);
+  const total = unit * qty;
+  d.inventory[name] = owned - qty;
   if (d.inventory[name] <= 0) delete d.inventory[name];
   if (d.equipped === name && (d.inventory[name] || 0) < 1) d.equipped = null;
-  d.tokens += price;
+  d.tokens += total;
   saveData(u, d);
   closeBlookAction();
   refreshUI();
@@ -19,24 +24,30 @@ function confirmListBazaar() {
   const name = actionBlook;
   const u = currentUser();
   const d = getData(u);
-  if ((d.inventory[name] || 0) < 1) { setMsg("baListMsg", "You don't own this blook", false); return; }
+  const owned = d.inventory[name] || 0;
+  if (owned < 1) { setMsg("baListMsg", "You don't own this blook", false); return; }
+  let qty = Math.floor(Number((document.getElementById("baListQty") || {}).value) || 1);
+  if (qty < 1) qty = 1;
+  if (qty > owned) qty = owned;
   const price = Math.floor(Number(document.getElementById("baListPrice").value) || 0);
   if (price < 1) { setMsg("baListMsg", "Price must be at least 1", false); return; }
-  d.inventory[name] -= 1;
+  d.inventory[name] = owned - qty;
   if (d.inventory[name] <= 0) delete d.inventory[name];
   if (d.equipped === name && (d.inventory[name] || 0) < 1) d.equipped = null;
   saveData(u, d);
   const b = blookByName[name];
   const listings = getListings();
-  listings.push({
-    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
-    seller: u, blook: name, pack: b ? b.pack : "", rarity: b ? b.rarity : "",
-    img: b ? b.img : "", price: price, at: Date.now()
-  });
+  for (let i = 0; i < qty; i++) {
+    listings.push({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7) + i,
+      seller: u, blook: name, pack: b ? b.pack : "", rarity: b ? b.rarity : "",
+      img: b ? b.img : "", price: price, at: Date.now()
+    });
+  }
   saveListings(listings);
   closeBlookAction();
   refreshUI();
-  alert("Listed " + name + " on the Bazaar for " + price + " " + tokenIcon().replace(/<[^>]+>/g, "coin"));
+  alert("Listed ×" + qty + " " + name + " on the Bazaar for " + price + " each");
 }
 
 function renderBazaar() {
@@ -166,7 +177,7 @@ function renderBlooks() {
         (qty > 0 ? '<span class="qty">×' + qty + "</span>" : "") +
         "</div>";
     }).join("");
-    return '<div class="pack-section"><h3>' + pack + "</h3><div class="blook-grid">" + cells + "</div></div>";
+    return '<div class="pack-section"><h3>' + pack + '</h3><div class="blook-grid">' + cells + '</div></div>';
   }).join("");
   root.querySelectorAll(".blook-slot.sellable").forEach(el => {
     el.onclick = () => openBlookAction(el.getAttribute("data-name"));
