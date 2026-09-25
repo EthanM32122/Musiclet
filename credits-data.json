@@ -1,0 +1,24 @@
+[
+  {
+    "id": "ethan",
+    "name": "EthanM32",
+    "role": "Owner",
+    "roleColor": "#7c4dff",
+    "titleColor": "linear-gradient(90deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff)",
+    "blurb": "Owner, coder of Musiclet. Loves playing trumpet.",
+    "full": "Owner and coder of Musiclet. Loves playing trumpet.",
+    "letter": "E",
+    "bg": "linear-gradient(145deg, #7e57c2, #4527a0)"
+  },
+  {
+    "id": "steven",
+    "name": "Steven Montez",
+    "role": "Teacher",
+    "roleColor": "#26c6da",
+    "titleColor": null,
+    "blurb": "My teacher for music — shows EthanM32 how to play trumpet.",
+    "full": "My teacher for music. Shows EthanM32 how to play trumpet.",
+    "letter": "S",
+    "bg": "linear-gradient(145deg, #26c6da, #00838f)"
+  }
+]
