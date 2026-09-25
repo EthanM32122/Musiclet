@@ -399,15 +399,32 @@ function openBlookAction(name) {
   const u = currentUser();
   if (!u) return;
   const d = getData(u);
-  if ((d.inventory[name] || 0) < 1) return;
+  const owned = d.inventory[name] || 0;
+  if (owned < 1) return;
   const b = blookByName[name];
   if (!b) return;
   actionBlook = name;
+  const unit = sellPrice(name);
   document.getElementById("baTitle").textContent = "Manage Blook";
   document.getElementById("baImg").src = b.img;
   document.getElementById("baName").textContent = b.name;
-  document.getElementById("baInfo").textContent = b.rarity + " · " + b.pack + " · You own ×" + d.inventory[name];
-  document.getElementById("baSellBtn").innerHTML = "Sell for " + sellPrice(name) + " " + tokenIcon();
+  document.getElementById("baInfo").textContent = b.rarity + " · " + b.pack + " · You own ×" + owned;
+  const sellQty = document.getElementById("baSellQty");
+  const listQty = document.getElementById("baListQty");
+  if (sellQty) { sellQty.max = owned; sellQty.value = "1"; sellQty.min = "1"; }
+  if (listQty) { listQty.max = owned; listQty.value = "1"; listQty.min = "1"; }
+  function updateSellHint() {
+    const q = Math.max(1, Math.min(owned, Math.floor(Number(sellQty && sellQty.value) || 1)));
+    const hint = document.getElementById("baSellHint");
+    if (hint) hint.innerHTML = "You'll get " + (unit * q).toLocaleString() + " " + tokenIcon() + " (" + unit + " each)";
+    const btn = document.getElementById("baSellBtn");
+    if (btn) btn.innerHTML = "Sell ×" + q + " for " + (unit * q).toLocaleString() + " " + tokenIcon();
+  }
+  if (sellQty) {
+    sellQty.oninput = updateSellHint;
+    sellQty.onchange = updateSellHint;
+  }
+  updateSellHint();
   document.getElementById("baListPrice").value = "";
   document.getElementById("baListMsg").textContent = "";
   document.getElementById("blookActionModal").classList.add("open");
