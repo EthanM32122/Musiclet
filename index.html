@@ -6,6 +6,7 @@
   <title>Musiclet</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="stats-theme.css" />
+  <link rel="stylesheet" href="credits-theme.css" />
   <link rel="stylesheet" href="badge-styles.css" />
   <link rel="stylesheet" href="token.css" />
 </head>
@@ -40,6 +41,7 @@
       <button class="nav-item" data-page="market" onclick="showPage('market')"><span class="nav-ico" aria-hidden="true">🏪</span><span class="nav-label">Market</span></button>
       <button class="nav-item" data-page="blooks" onclick="showPage('blooks')"><span class="nav-ico" aria-hidden="true">🧳</span><span class="nav-label">Blooks</span></button>
       <button class="nav-item" data-page="bazaar" onclick="showPage('bazaar')"><span class="nav-ico" aria-hidden="true">🔨</span><span class="nav-label">Bazaar</span></button>
+      <button class="nav-item" data-page="credits" onclick="showPage('credits')"><span class="nav-ico" aria-hidden="true">❤</span><span class="nav-label">Credits</span></button>
       <button class="nav-item" data-page="settings" onclick="showPage('settings')"><span class="nav-ico" aria-hidden="true">⚙</span><span class="nav-label">Settings</span></button>
     </nav>
     <main class="content">
@@ -125,6 +127,10 @@
         <div class="rarity-bar" id="rarityBar"></div>
         <div id="blooksByPack"></div>
       </section>
+      <section id="page-credits" class="page">
+        <div class="page-head"><h1 style="color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.3)">Credits</h1><span class="muted" style="color:rgba(255,255,255,0.8)">People behind Musiclet</span></div>
+        <div class="credits-grid" id="creditsGrid"></div>
+      </section>
       <section id="page-settings" class="page">
         <div class="page-head"><h1>Settings</h1><span class="muted">Manage account</span></div>
         <div class="settings-stack">
@@ -170,11 +176,19 @@
   <div class="modal-bg" id="blookActionModal"><div class="modal"><h2 id="baTitle">Blook</h2><img id="baImg" class="open-img" /><div class="open-name" id="baName">—</div><div class="muted" id="baInfo" style="text-align:center;margin-bottom:12px"></div><div class="ba-section"><strong>Instant sell</strong><label class="settings-label">Amount</label><input type="number" id="baSellQty" class="settings-input" min="1" value="1" /><p class="muted" id="baSellHint" style="font-size:12px;margin:6px 0 8px"></p><button class="btn btn-sm btn-green full" id="baSellBtn" onclick="confirmInstantSell()">Sell</button></div><div class="ba-section" style="margin-top:18px"><strong>List on Bazaar</strong><label class="settings-label">Amount</label><input type="number" id="baListQty" class="settings-input" min="1" value="1" /><label class="settings-label">Price each</label><input type="number" id="baListPrice" class="settings-input" min="1" /><p class="settings-msg" id="baListMsg"></p><button class="btn btn-sm btn-purple full" onclick="confirmListBazaar()">List on Bazaar</button></div><button class="btn btn-sm btn-ghost full" style="margin-top:14px" onclick="closeBlookAction()">Cancel</button></div></div>
   <div class="modal-bg" id="profileModal"><div class="modal profile-modal"><div class="profile-header"><button type="button" class="profile-avatar" id="profileAvatarBtn"><img id="profileAvatarImg" style="display:none" /><span id="profileAvatarLetter">?</span></button><div><h2 id="profileName">—</h2><p class="muted" id="profileSubtitle">Level 1</p><div class="profile-badges" id="profileBadges"></div></div></div><h3 class="profile-section-title">Stats</h3><div class="profile-stats" id="profileStats"></div><h3 class="profile-section-title">Collection</h3><div class="profile-blooks" id="profileBlooks"></div><h3 class="profile-section-title">Bazaar listings</h3><div class="profile-listings" id="profileListings"></div><button class="btn btn-sm btn-ghost full" style="margin-top:16px" onclick="closeProfile()">Close</button></div></div>
   <div class="modal-bg" id="equipModal"><div class="modal profile-modal"><h2>Equip Avatar</h2><p class="muted" style="text-align:center;margin-bottom:12px">Pick a Blook</p><div class="equip-grid" id="equipGrid"></div><button class="btn btn-sm btn-ghost full" style="margin-top:14px" onclick="unequipBlook()">Use letter avatar</button><button class="btn btn-sm btn-ghost full" style="margin-top:8px" onclick="closeEquipModal()">Cancel</button></div></div>
+  <div class="modal-bg" id="creditModal"><div class="modal credit-modal">
+    <div class="credit-modal-avatar" id="creditModalAvatar"></div>
+    <h2 id="creditModalName">—</h2>
+    <div class="credit-modal-role" id="creditModalRole">—</div>
+    <p class="credit-modal-desc" id="creditModalDesc">—</p>
+    <button class="btn btn-sm btn-ghost full" style="margin-top:16px" onclick="closeCreditModal()">Close</button>
+  </div></div>
   <script src="falling-bg.js"></script>
   <script src="catalog.js"></script>
   <script src="app-part1.js"></script>
   <script src="app-part2.js"></script>
   <script src="badges.js"></script>
   <script src="stats-refresh.js"></script>
+  <script src="credits.js"></script>
 </body>
 </html>
