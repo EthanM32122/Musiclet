@@ -43,24 +43,65 @@
     </nav>
     <main class="content">
       <section id="page-stats" class="page active">
-        <div class="page-head stats-head">
+        <div class="blacket-profile">
           <button type="button" class="stats-pfp" id="statsPfpBtn" onclick="openEquipModal()" title="Change avatar">
             <img id="statsPfpImg" src="" alt="" style="display:none" /><span id="statsPfpLetter">?</span>
           </button>
-          <div><h1>Stats</h1><span class="muted">Your progress on Musiclet · click photo to equip</span></div>
+          <div class="blacket-profile-main">
+            <div class="blacket-name-row">
+              <div class="blacket-name-box">
+                <div class="blacket-username" id="statsUsername">—</div>
+                <div class="blacket-sub" id="statsSub">Player</div>
+              </div>
+              <span class="blacket-badges" id="statsBadges"></span>
+            </div>
+            <div class="blacket-xp-row">
+              <span class="blacket-lvl" id="statLevelBadge">1</span>
+              <div class="blacket-xp-track"><div class="blacket-xp-fill" id="statXpFill" style="width:0%"></div></div>
+            </div>
+            <div class="blacket-actions">
+              <button type="button" class="blacket-btn blacket-btn-orange" onclick="openProfile()">🔍 View Stats</button>
+              <button type="button" class="blacket-btn blacket-btn-green" onclick="showPage('settings')">⇄ Trade</button>
+              <button type="button" class="blacket-btn blacket-btn-purple" id="claimBtn" onclick="claimDaily()">🎁 Daily Claim</button>
+            </div>
+          </div>
         </div>
-        <div class="stats-grid">
-          <div class="card stat-card"><div class="stat-label">Tokens</div><div class="stat-value" id="statTokens">0</div></div>
-          <div class="card stat-card"><div class="stat-label">Level</div><div class="stat-value" id="statLevel">1</div></div>
-          <div class="card stat-card"><div class="stat-label">XP</div><div class="stat-value" id="statXP">0</div></div>
-          <div class="card stat-card"><div class="stat-label">Packs Opened</div><div class="stat-value" id="statPacks">0</div></div>
-          <div class="card stat-card"><div class="stat-label">Blook Types</div><div class="stat-value" id="statBlooks">0</div></div>
-          <div class="card stat-card"><div class="stat-label">Total Blooks</div><div class="stat-value" id="statTotal">0</div></div>
+
+        <div class="blacket-stats-wrap">
+          <div class="blacket-stats-tab">Stats</div>
+          <div class="blacket-stats-bar">
+            <div class="blacket-stat">
+              <span class="blacket-stat-ico token-icon"></span>
+              <div>
+                <div class="blacket-stat-label">Tokens</div>
+                <div class="blacket-stat-value" id="statTokens">0</div>
+              </div>
+            </div>
+            <div class="blacket-stat">
+              <span class="blacket-stat-ico">🔓</span>
+              <div>
+                <div class="blacket-stat-label">Blooks Unlocked</div>
+                <div class="blacket-stat-value" id="statBlooks">0</div>
+              </div>
+            </div>
+            <div class="blacket-stat">
+              <span class="blacket-stat-ico">📦</span>
+              <div>
+                <div class="blacket-stat-label">Packs Opened</div>
+                <div class="blacket-stat-value" id="statPacks">0</div>
+              </div>
+            </div>
+            <div class="blacket-stat">
+              <span class="blacket-stat-ico">🎒</span>
+              <div>
+                <div class="blacket-stat-label">Total Blooks</div>
+                <div class="blacket-stat-value" id="statTotal">0</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="card claim-card">
-          <div><strong>Daily Claim</strong><p class="muted">Get free tokens every day</p></div>
-          <button class="btn btn-green" id="claimBtn" onclick="claimDaily()">Claim 4000 <span class="token-icon"></span></button>
-        </div>
+        <span id="statLevel" style="display:none">1</span>
+        <span id="statXP" style="display:none">0</span>
       </section>
       <section id="page-market" class="page">
         <div class="page-head"><h1>Market</h1><span class="muted">Buy & open packs</span></div>
