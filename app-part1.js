@@ -24,7 +24,7 @@ function safeRemove(k) { try { localStorage.removeItem(k); } catch (e) {} }
 function getUsers() { try { return JSON.parse(safeGet("ml_users", "{}")); } catch (e) { return {}; } }
 function currentUser() { return safeGet("ml_current", ""); }
 function defaultData() {
-  return { tokens: CATALOG.startTokens || 1500, exp: 0, packsOpened: 0, inventory: {}, lastClaim: "", equipped: null, customPfp: null, equippedBanner: null, badges: [] };
+  return { tokens: CATALOG.startTokens || 1500, exp: 0, packsOpened: 0, inventory: {}, lastClaim: "", equipped: null, customPfp: null, equippedBanner: null, badges: [], clanId: null };
 }
 function getData(u) {
   try { return Object.assign(defaultData(), JSON.parse(safeGet("ml_data_" + u, "{}"))); }
