@@ -1,1 +1,52 @@
-PLACEHOLDER2
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #7ec8e3;
+  --card: rgba(255, 255, 255, 0.92);
+  --border: rgba(0, 80, 140, 0.12);
+  --text: #1a3a5c;
+  --muted: #5a7a9a;
+  --green: #8bc34a;
+  --green-dark: #558b2f;
+  --purple: #7e57c2;
+  --purple-dark: #4527a0;
+  --sidebar: #4a1f8c;
+}
+html, body { height: 100%; }
+html { background: #5b21b6; }
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: transparent;
+  color: var(--text);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+#fallingBg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: transparent;
+}
+#fallingBg .sq {
+  display: none; /* patterned bg replaces falling squares */
+  position: absolute;
+  top: -120px;
+  border-radius: 18%;
+  animation-name: musicletFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes musicletFall {
+  0% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+  100% { transform: translateY(110vh) rotate(var(--rot, 0deg)); }
+}
+.screen { display: none; min-height: 100vh; position: relative; z-index: 1; }
+.screen.active { display: block; }
+#landing {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
