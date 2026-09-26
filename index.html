@@ -51,6 +51,7 @@
     </nav>
     <main class="content">
       <section id="page-stats" class="page active">
+        <h1 class="stats-title">STATS</h1>
         <div class="blacket-profile">
           <button type="button" class="stats-pfp" id="statsPfpBtn" onclick="openEquipModal()" title="Change avatar">
             <img id="statsPfpImg" src="" alt="" style="display:none" /><span id="statsPfpLetter">?</span>
@@ -77,10 +78,24 @@
         <div class="blacket-stats-wrap">
           <div class="blacket-stats-tab">Stats</div>
           <div class="blacket-stats-bar">
-            <div class="blacket-stat"><span class="blacket-stat-ico token-icon"></span><div><div class="blacket-stat-label">Tokens</div><div class="blacket-stat-value" id="statTokens">0</div></div></div>
-            <div class="blacket-stat"><span class="blacket-stat-ico">🔓</span><div><div class="blacket-stat-label">Blooks Unlocked</div><div class="blacket-stat-value" id="statBlooks">0</div></div></div>
-            <div class="blacket-stat"><span class="blacket-stat-ico">📦</span><div><div class="blacket-stat-label">Packs Opened</div><div class="blacket-stat-value" id="statPacks">0</div></div></div>
-            <div class="blacket-stat"><span class="blacket-stat-ico">🎒</span><div><div class="blacket-stat-label">Total Blooks</div><div class="blacket-stat-value" id="statTotal">0</div></div></div>
+            <div class="blacket-stat">
+              <span class="blacket-stat-ico token-icon"></span>
+              <div class="blacket-stat-label">Tokens</div>
+              <div class="blacket-stat-value" id="statTokens">0</div>
+            </div>
+            <div class="blacket-stat">
+              <div class="blacket-stat-label">Blooks Unlocked</div>
+              <div class="blacket-stat-value" id="statBlooks">0</div>
+            </div>
+            <div class="blacket-stat">
+              <div class="blacket-stat-label">Packs Opened</div>
+              <div class="blacket-stat-value" id="statPacks">0</div>
+            </div>
+            <div class="blacket-stat" style="display:none">
+              <span class="blacket-stat-ico">🎒</span>
+              <div class="blacket-stat-label">Total Blooks</div>
+              <div class="blacket-stat-value" id="statTotal">0</div>
+            </div>
           </div>
         </div>
         <span id="statLevel" style="display:none">1</span>
