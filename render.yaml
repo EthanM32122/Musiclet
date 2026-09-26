@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: musiclet
+    runtime: static
+    repo: https://github.com/EthanM32122/Musiclet
+    branch: main
+    buildCommand: ""
+    staticPublishPath: .
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
