@@ -222,3 +222,43 @@ body {
 }
 .equip-item img { width: 56px; height: 56px; object-fit: contain; display: block; margin: 0 auto 6px; }
 .error { color: #c62828; font-size: 13px; font-weight: 600; min-height: 18px; }
+
+/* Brand logo + animated Musiclet wordmark */
+.site-logo {
+  display: block;
+  object-fit: contain;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  background: #4a1f8c;
+}
+.site-logo-lg { width: 96px; height: 96px; margin: 0 auto 16px; border-radius: 22px; }
+.site-logo-sm {
+  width: 40px; height: 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+.brand-video-wrap {
+  width: min(420px, 92vw);
+  margin: 0 auto 12px;
+  line-height: 0;
+}
+.brand-video {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: transparent;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
+}
+.brand-with-logo {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  overflow: hidden;
+}
+.brand-video-mini {
+  height: 32px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
+  display: block;
+  background: transparent;
+}
