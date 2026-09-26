@@ -1,4 +1,2 @@
-Redeploy trigger: 2026-09-24
-
-Owner and Co-owner panels include Assign badges.
-If you still see the old panel, open Vercel > Deployments > Redeploy latest main commit.
+Purple patterned background applied site-wide via bg-pattern.css, bg-apply.js, and falling-bg.js.
+Hard refresh (Ctrl+Shift+R) after deploy if cache is stale.
