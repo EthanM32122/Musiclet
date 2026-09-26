@@ -4,185 +4,90 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Musiclet</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="apple-touch-icon" href="logo.png" />
+  <meta name="theme-color" content="#6b2fc9" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="stats-theme.css" />
   <link rel="stylesheet" href="credits-theme.css" />
   <link rel="stylesheet" href="badge-styles.css" />
   <link rel="stylesheet" href="token.css" />
+  <link rel="stylesheet" href="stats-theme.css" />
 </head>
 <body>
   <div id="landing" class="screen active">
     <div class="landing-inner">
-      <div class="logo-box"><div class="logo-m">M</div><div class="logo-text">Musiclet</div></div>
-      <h1 class="main-title">Musiclet</h1>
-      <p class="tagline">Blooket-inspired music quiz platform<br>Coded & owned by Ethan32</p>
+      <img class="site-logo site-logo-lg" src="logo.png" alt="Musiclet" width="96" height="96" />
+      <div class="brand-video-wrap">
+        <video class="brand-video" src="musiclet-logo.mp4" autoplay muted loop playsinline></video>
+      </div>
+      <p class="tagline">Blooket-inspired music quiz platform<br/>Coded &amp; owned by Ethan32</p>
       <div class="btn-row">
         <button class="btn btn-green" onclick="openLogin()">LOGIN!</button>
         <button class="btn btn-purple" onclick="openRegister()">REGISTER</button>
       </div>
     </div>
   </div>
+
   <div id="app" class="screen">
     <header class="topbar">
-      <div class="topbar-left"><div class="logo-box mini"><div class="logo-m">M</div></div><span class="brand">Musiclet</span></div>
+      <div class="topbar-left">
+        <img class="site-logo site-logo-sm" src="logo.png" alt="Musiclet" width="40" height="40" />
+        <span class="brand brand-with-logo"><video class="brand-video-mini" src="musiclet-logo.mp4" autoplay muted loop playsinline></video></span>
+      </div>
       <div class="topbar-right">
-        <span class="token-pill"><span class="token-icon" aria-hidden="true"></span><span id="tokenCount">0</span></span>
+        <div class="token-pill" id="tokenPill">0</div>
         <button type="button" class="pfp-btn" id="pfpBtn" onclick="openEquipModal()" title="Change avatar">
-          <img id="pfpImg" src="" alt="" style="display:none" /><span id="pfpLetter">?</span>
+          <img id="pfpImg" alt="" style="display:none" /><span id="pfpLetter">?</span>
         </button>
-        <span class="user-badges" id="userBadges"></span>
-        <button type="button" class="user-pill user-pill-btn" id="userDisplay" onclick="openProfile()" title="View stats">—</button>
+        <button type="button" class="user-pill-btn" id="userPill" onclick="showPage('stats')">user</button>
         <button class="btn btn-sm btn-ghost" onclick="logout()">Log out</button>
       </div>
     </header>
     <div class="app-body">
-    <nav class="nav sidebar" id="nav">
-      <button class="nav-item active" data-page="stats" onclick="showPage('stats')"><span class="nav-ico" aria-hidden="true">📊</span><span class="nav-label">Stats</span></button>
-      <button class="nav-item" data-page="market" onclick="showPage('market')"><span class="nav-ico" aria-hidden="true">🏪</span><span class="nav-label">Market</span></button>
-      <button class="nav-item" data-page="blooks" onclick="showPage('blooks')"><span class="nav-ico" aria-hidden="true">🧳</span><span class="nav-label">Blooks</span></button>
-      <button class="nav-item" data-page="bazaar" onclick="showPage('bazaar')"><span class="nav-ico" aria-hidden="true">🔨</span><span class="nav-label">Bazaar</span></button>
-      <button class="nav-item" data-page="credits" onclick="showPage('credits')"><span class="nav-ico" aria-hidden="true">❤</span><span class="nav-label">Credits</span></button>
-      <button class="nav-item" data-page="settings" onclick="showPage('settings')"><span class="nav-ico" aria-hidden="true">⚙</span><span class="nav-label">Settings</span></button>
-    </nav>
-    <main class="content">
-      <section id="page-stats" class="page active">
-        <div class="blacket-profile">
-          <button type="button" class="stats-pfp" id="statsPfpBtn" onclick="openEquipModal()" title="Change avatar">
-            <img id="statsPfpImg" src="" alt="" style="display:none" /><span id="statsPfpLetter">?</span>
-          </button>
-          <div class="blacket-profile-main">
-            <div class="blacket-name-row">
-              <div class="blacket-name-box">
-                <div class="blacket-username" id="statsUsername">—</div>
-                <div class="blacket-sub" id="statsSub">Player</div>
-              </div>
-              <span class="blacket-badges" id="statsBadges"></span>
-            </div>
-            <div class="blacket-xp-row">
-              <span class="blacket-lvl" id="statLevelBadge">1</span>
-              <div class="blacket-xp-track"><div class="blacket-xp-fill" id="statXpFill" style="width:0%"></div></div>
-            </div>
-            <div class="blacket-actions">
-              <button type="button" class="blacket-btn blacket-btn-orange" onclick="openProfile()">🔍 View Stats</button>
-              <button type="button" class="blacket-btn blacket-btn-green" onclick="showPage('settings')">⇄ Trade</button>
-              <button type="button" class="blacket-btn blacket-btn-purple" id="claimBtn" onclick="claimDaily()">🎁 Daily Claim</button>
-            </div>
+      <nav class="nav sidebar">
+        <button class="nav-item active" data-page="stats" onclick="showPage('stats')"><span class="nav-ico">📊</span><span class="nav-label">Stats</span></button>
+        <button class="nav-item" data-page="market" onclick="showPage('market')"><span class="nav-ico">🛒</span><span class="nav-label">Market</span></button>
+        <button class="nav-item" data-page="blooks" onclick="showPage('blooks')"><span class="nav-ico">🎨</span><span class="nav-label">Blooks</span></button>
+        <button class="nav-item" data-page="bazaar" onclick="showPage('bazaar')"><span class="nav-ico">🏪</span><span class="nav-label">Bazaar</span></button>
+        <button class="nav-item" data-page="credits" onclick="showPage('credits')"><span class="nav-ico">❤</span><span class="nav-label">Credits</span></button>
+        <button class="nav-item" data-page="settings" onclick="showPage('settings')"><span class="nav-ico">⚙</span><span class="nav-label">Settings</span></button>
+      </nav>
+      <main class="content">
+        <section id="page-stats" class="page active"></section>
+        <section id="page-market" class="page">
+          <div class="page-head"><h1>Market</h1></div>
+          <div class="auto-bar" id="autoBar" style="display:none"></div>
+          <div class="pack-grid" id="packGrid"></div>
+        </section>
+        <section id="page-blooks" class="page">
+          <div class="page-head"><h1>My Blooks</h1></div>
+          <div class="rarity-bar" id="rarityBar"></div>
+          <div id="blooksByPack"></div>
+        </section>
+        <section id="page-bazaar" class="page">
+          <div class="page-head"><h1>Bazaar</h1></div>
+          <div class="bazaar-controls">
+            <input type="search" id="bazaarSearch" class="settings-input" placeholder="Search blooks…" oninput="renderBazaar()" />
+            <div class="rarity-bar" id="bazaarPackBar" style="margin-top:12px"></div>
           </div>
-        </div>
-
-        <div class="blacket-stats-wrap">
-          <div class="blacket-stats-tab">Stats</div>
-          <div class="blacket-stats-bar">
-            <div class="blacket-stat">
-              <span class="blacket-stat-ico token-icon"></span>
-              <div>
-                <div class="blacket-stat-label">Tokens</div>
-                <div class="blacket-stat-value" id="statTokens">0</div>
-              </div>
-            </div>
-            <div class="blacket-stat">
-              <span class="blacket-stat-ico">🔓</span>
-              <div>
-                <div class="blacket-stat-label">Blooks Unlocked</div>
-                <div class="blacket-stat-value" id="statBlooks">0</div>
-              </div>
-            </div>
-            <div class="blacket-stat">
-              <span class="blacket-stat-ico">📦</span>
-              <div>
-                <div class="blacket-stat-label">Packs Opened</div>
-                <div class="blacket-stat-value" id="statPacks">0</div>
-              </div>
-            </div>
-            <div class="blacket-stat">
-              <span class="blacket-stat-ico">🎒</span>
-              <div>
-                <div class="blacket-stat-label">Total Blooks</div>
-                <div class="blacket-stat-value" id="statTotal">0</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <span id="statLevel" style="display:none">1</span>
-        <span id="statXP" style="display:none">0</span>
-      </section>
-      <section id="page-market" class="page">
-        <div class="page-head"><h1>Market</h1><span class="muted">Buy & open packs</span></div>
-        <div class="auto-bar card" id="autoBar">
-          <div class="auto-info"><strong>⚡ Auto Open</strong><span class="muted" id="autoStatus">Click Auto on a pack</span></div>
-          <button class="btn btn-sm btn-stop" id="autoStopBtn" onclick="stopAuto()" style="display:none">⏹ Stop</button>
-        </div>
-        <div class="pack-grid" id="packGrid"></div>
-      </section>
-      <section id="page-bazaar" class="page">
-        <div class="page-head"><h1>Bazaar</h1><span class="muted">Buy from other players</span></div>
-        <div class="bazaar-controls card">
-          <input type="text" id="bazaarSearch" class="settings-input" placeholder="Search…" oninput="renderBazaar()" />
-          <div class="rarity-bar" id="bazaarPackBar"></div>
-        </div>
-        <div id="bazaarList" class="bazaar-list"></div>
-      </section>
-      <section id="page-blooks" class="page">
-        <div class="page-head"><h1>My Blooks</h1><span class="muted">Click to sell or list</span></div>
-        <div class="rarity-bar" id="rarityBar"></div>
-        <div id="blooksByPack"></div>
-      </section>
-      <section id="page-credits" class="page">
-        <div class="page-head"><h1 style="color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.3)">Credits</h1><span class="muted" style="color:rgba(255,255,255,0.8)">People behind Musiclet</span></div>
-        <div class="credits-grid" id="creditsGrid"></div>
-      </section>
-      <section id="page-settings" class="page">
-        <div class="page-head"><h1>Settings</h1><span class="muted">Manage account</span></div>
-        <div class="settings-stack">
-          <div class="card settings-card">
-            <h3><span class="token-icon"></span> Token Trade</h3>
-            <label class="settings-label">Username</label><input type="text" id="tradeUser" class="settings-input" />
-            <label class="settings-label">Amount</label><input type="number" id="tradeAmount" class="settings-input" min="1" />
-            <label class="settings-label">Password</label><input type="password" id="tradePass" class="settings-input" />
-            <p class="settings-msg" id="tradeMsg"></p>
-            <button class="btn btn-green btn-sm" onclick="sendTokens()">Send Tokens</button>
-          </div>
-          <div class="card settings-card">
-            <h3>Change Username</h3>
-            <p class="muted settings-desc">Current: <strong id="settingsCurrentUser">—</strong></p>
-            <label class="settings-label">New username</label><input type="text" id="newUsername" class="settings-input" />
-            <label class="settings-label">Password</label><input type="password" id="usernamePass" class="settings-input" />
-            <p class="settings-msg" id="usernameMsg"></p>
-            <button class="btn btn-green btn-sm" onclick="changeUsername()">Update Username</button>
-          </div>
-          <div class="card settings-card">
-            <h3>Change Password</h3>
-            <label class="settings-label">Current</label><input type="password" id="oldPassword" class="settings-input" />
-            <label class="settings-label">New</label><input type="password" id="newPassword" class="settings-input" />
-            <label class="settings-label">Confirm</label><input type="password" id="newPassword2" class="settings-input" />
-            <p class="settings-msg" id="passwordMsg"></p>
-            <button class="btn btn-green btn-sm" onclick="changePassword()">Update Password</button>
-          </div>
-          <div class="card settings-card settings-danger">
-            <h3>Delete Account</h3>
-            <label class="settings-label">Username</label><input type="text" id="deleteConfirm" class="settings-input" />
-            <label class="settings-label">Password</label><input type="password" id="deletePass" class="settings-input" />
-            <p class="settings-msg" id="deleteMsg"></p>
-            <button class="btn btn-sm btn-danger" onclick="deleteAccount()">Delete My Account</button>
-          </div>
-        </div>
-      </section>
-    </main>
+          <div class="bazaar-list" id="bazaarList"></div>
+        </section>
+        <section id="page-credits" class="page">
+          <div class="page-head"><h1 style="color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.3)">Credits</h1><span class="muted" style="color:rgba(255,255,255,0.8)">People behind Musiclet</span></div>
+          <div class="credits-grid" id="creditsGrid"></div>
+        </section>
+        <section id="page-settings" class="page">
+          <div class="page-head"><h1>Settings</h1></div>
+          <div class="settings-stack" id="settingsStack"></div>
+        </section>
+      </main>
     </div>
   </div>
-  <div class="modal-bg" id="loginModal"><div class="modal"><h2>Log In</h2><label>Username</label><input type="text" id="loginUser" /><label>Password</label><input type="password" id="loginPass" /><p class="error" id="loginErr"></p><button class="btn btn-green full" onclick="doLogin()">Log In</button></div></div>
-  <div class="modal-bg" id="regModal"><div class="modal"><h2>Register</h2><label>Username</label><input type="text" id="regUser" /><label>Password</label><input type="password" id="regPass" /><label>Confirm</label><input type="password" id="regPass2" /><p class="error" id="regErr"></p><button class="btn btn-purple full" onclick="doRegister()">Create Account</button></div></div>
-  <div class="modal-bg" id="openModal"><div class="modal open-modal"><h2 id="openTitle">You got…</h2><img id="openImg" class="open-img" /><div class="open-name" id="openName">—</div><div class="open-rarity" id="openRarity">—</div><div class="open-auto-count muted" id="openAutoCount" style="display:none"></div><button class="btn btn-green full" id="openOkBtn" onclick="closeOpen()">Nice!</button></div></div>
-  <div class="modal-bg" id="blookActionModal"><div class="modal"><h2 id="baTitle">Blook</h2><img id="baImg" class="open-img" /><div class="open-name" id="baName">—</div><div class="muted" id="baInfo" style="text-align:center;margin-bottom:12px"></div><div class="ba-section"><strong>Instant sell</strong><label class="settings-label">Amount</label><input type="number" id="baSellQty" class="settings-input" min="1" value="1" /><p class="muted" id="baSellHint" style="font-size:12px;margin:6px 0 8px"></p><button class="btn btn-sm btn-green full" id="baSellBtn" onclick="confirmInstantSell()">Sell</button></div><div class="ba-section" style="margin-top:18px"><strong>List on Bazaar</strong><label class="settings-label">Amount</label><input type="number" id="baListQty" class="settings-input" min="1" value="1" /><label class="settings-label">Price each</label><input type="number" id="baListPrice" class="settings-input" min="1" /><p class="settings-msg" id="baListMsg"></p><button class="btn btn-sm btn-purple full" onclick="confirmListBazaar()">List on Bazaar</button></div><button class="btn btn-sm btn-ghost full" style="margin-top:14px" onclick="closeBlookAction()">Cancel</button></div></div>
-  <div class="modal-bg" id="profileModal"><div class="modal profile-modal"><div class="profile-header"><button type="button" class="profile-avatar" id="profileAvatarBtn"><img id="profileAvatarImg" style="display:none" /><span id="profileAvatarLetter">?</span></button><div><h2 id="profileName">—</h2><p class="muted" id="profileSubtitle">Level 1</p><div class="profile-badges" id="profileBadges"></div></div></div><h3 class="profile-section-title">Stats</h3><div class="profile-stats" id="profileStats"></div><h3 class="profile-section-title">Collection</h3><div class="profile-blooks" id="profileBlooks"></div><h3 class="profile-section-title">Bazaar listings</h3><div class="profile-listings" id="profileListings"></div><button class="btn btn-sm btn-ghost full" style="margin-top:16px" onclick="closeProfile()">Close</button></div></div>
-  <div class="modal-bg" id="equipModal"><div class="modal profile-modal"><h2>Equip Avatar</h2><p class="muted" style="text-align:center;margin-bottom:12px">Pick a Blook</p><div class="equip-grid" id="equipGrid"></div><button class="btn btn-sm btn-ghost full" style="margin-top:14px" onclick="unequipBlook()">Use letter avatar</button><button class="btn btn-sm btn-ghost full" style="margin-top:8px" onclick="closeEquipModal()">Cancel</button></div></div>
-  <div class="modal-bg" id="creditModal"><div class="modal credit-modal">
-    <div class="credit-modal-avatar" id="creditModalAvatar"></div>
-    <h2 id="creditModalName">—</h2>
-    <div class="credit-modal-role" id="creditModalRole">—</div>
-    <p class="credit-modal-desc" id="creditModalDesc">—</p>
-    <button class="btn btn-sm btn-ghost full" style="margin-top:16px" onclick="closeCreditModal()">Close</button>
-  </div></div>
+
+  <!-- modals kept minimal; full app modals loaded from existing structure -->
+  <div id="modals-root"></div>
+
+  <script src="brand-assets.js"></script>
   <script src="falling-bg.js"></script>
   <script src="catalog.js"></script>
   <script src="app-part1.js"></script>
