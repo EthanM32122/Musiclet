@@ -21,8 +21,6 @@ body {
   position: relative;
   overflow-x: hidden;
 }
-
-/* === Animated falling squares background === */
 #fallingBg {
   position: fixed;
   inset: 0;
@@ -43,7 +41,6 @@ body {
   0% { transform: translateY(0) rotate(var(--rot, 0deg)); }
   100% { transform: translateY(110vh) rotate(var(--rot, 0deg)); }
 }
-
 .screen { display: none; min-height: 100vh; position: relative; z-index: 1; }
 .screen.active { display: block; }
 #landing {
@@ -57,19 +54,7 @@ body {
   z-index: 1;
 }
 #landing.active { display: flex; }
-.landing-inner { max-width: 480px; }
-.logo-box {
-  width: 88px; height: 88px; margin: 0 auto 16px;
-  background: linear-gradient(145deg, #4fc3f7, #0288d1);
-  border-radius: 22px;
-  display: grid; place-items: center;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-}
-.logo-box.mini { width: 40px; height: 40px; margin: 0; border-radius: 12px; }
-.logo-m { font-size: 42px; font-weight: 900; color: #fff; line-height: 1; }
-.logo-box.mini .logo-m { font-size: 22px; }
-.logo-text { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9); margin-top: -4px; }
-.main-title { font-size: 48px; font-weight: 900; color: #fff; text-shadow: 0 3px 12px rgba(0,0,0,0.25); margin-bottom: 10px; }
+.landing-inner { max-width: 520px; }
 .tagline { color: rgba(255,255,255,0.9); font-size: 16px; line-height: 1.5; margin-bottom: 28px; }
 .btn-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
 .btn {
@@ -223,7 +208,7 @@ body {
 .equip-item img { width: 56px; height: 56px; object-fit: contain; display: block; margin: 0 auto 6px; }
 .error { color: #c62828; font-size: 13px; font-weight: 600; min-height: 18px; }
 
-/* Brand logo + animated Musiclet wordmark */
+/* Brand: M logo + Musiclet wordmark */
 .site-logo {
   display: block;
   object-fit: contain;
@@ -239,26 +224,47 @@ body {
 .brand-video-wrap {
   width: min(420px, 92vw);
   margin: 0 auto 12px;
-  line-height: 0;
+  display: flex;
+  justify-content: center;
 }
-.brand-video {
-  width: 100%;
-  height: auto;
-  display: block;
-  background: transparent;
+.brand-with-logo { display: inline-flex; align-items: center; }
+.musiclet-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  font-weight: 900;
+  font-size: clamp(42px, 10vw, 72px);
+  letter-spacing: -0.04em;
+  line-height: 1;
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
 }
-.brand-with-logo {
-  display: inline-flex;
-  align-items: center;
-  height: 36px;
-  overflow: hidden;
+.musiclet-wordmark-mini { font-size: 20px; filter: none; }
+.musiclet-wordmark .mw-m {
+  display: inline-block;
+  background: linear-gradient(135deg, #4f8cff, #7ec8ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 2px 0 0 rgba(255,80,120,0.4), -2px 0 0 rgba(80,120,255,0.4);
+  animation: mwTilt 2.5s ease-in-out infinite;
 }
-.brand-video-mini {
-  height: 32px;
-  width: auto;
-  max-width: 160px;
-  object-fit: contain;
-  display: block;
-  background: transparent;
+.musiclet-wordmark .mw-rest {
+  display: inline-block;
+  background: linear-gradient(90deg, #2dd4bf, #67e8f9, #a78bfa, #f472b6, #2dd4bf);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: mwShift 3.5s linear infinite;
+  text-shadow: 1px 0 0 rgba(255,100,150,0.3), -1px 0 0 rgba(100,150,255,0.3);
 }
+.musiclet-wordmark-mini .mw-m,
+.musiclet-wordmark-mini .mw-rest {
+  animation: none;
+  background: linear-gradient(90deg, #4f8cff, #2dd4bf);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+}
+@keyframes mwShift { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+@keyframes mwTilt { 0%,100% { transform: rotateY(0); } 50% { transform: rotateY(12deg) scale(1.04); } }
