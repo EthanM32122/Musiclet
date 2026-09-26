@@ -8,11 +8,11 @@ function confirmInstantSell() {
   const qty = Math.min(owned, Math.max(1, parseInt((document.getElementById("baSellQty") || {}).value, 10) || 1));
   if (owned < 1) { closeBlookAction(); return; }
   const b = BLOOKS.find(x => x.name === name);
-  const price = sellPrice(b ? b.rarity : "Common");
+  const price = sellPrice(name);
   d.tokens = (d.tokens || 0) + price * qty;
   d.inventory[name] = owned - qty;
   if (d.inventory[name] <= 0) delete d.inventory[name];
-  setData(u, d);
+  saveData(u, d);
   closeBlookAction();
   refreshUI();
 }
@@ -30,7 +30,7 @@ function confirmListBazaar() {
   if (!price || price < 1) { if (msg) msg.textContent = "Enter a price"; return; }
   d.inventory[name] = owned - qty;
   if (d.inventory[name] <= 0) delete d.inventory[name];
-  setData(u, d);
+  saveData(u, d);
   const b = BLOOKS.find(x => x.name === name);
   const list = getListings();
   list.push({
@@ -43,16 +43,6 @@ function confirmListBazaar() {
   refreshUI();
   showPage("bazaar");
 }
-
-function getListings() {
-  try { return JSON.parse(localStorage.getItem("ml_bazaar") || "[]"); } catch (e) { return []; }
-}
-function saveListings(list) {
-  localStorage.setItem("ml_bazaar", JSON.stringify(list));
-}
-
-var bazaarPackFilter = "all";
-var rarityFilter = "all";
 
 function renderBazaar() {
   const box = document.getElementById("bazaarList");
@@ -132,10 +122,10 @@ function buyListing(id) {
   buyer.tokens -= price * qty;
   if (!buyer.inventory) buyer.inventory = {};
   buyer.inventory[L.blook] = (buyer.inventory[L.blook] || 0) + qty;
-  setData(u, buyer);
+  saveData(u, buyer);
   const seller = getData(L.seller);
   seller.tokens = (seller.tokens || 0) + price * qty;
-  setData(L.seller, seller);
+  saveData(L.seller, seller);
   list.splice(idx, 1);
   saveListings(list);
   renderBazaar();
@@ -152,7 +142,7 @@ function cancelListing(id) {
   const d = getData(u);
   if (!d.inventory) d.inventory = {};
   d.inventory[L.blook] = (d.inventory[L.blook] || 0) + (L.qty || 1);
-  setData(u, d);
+  saveData(u, d);
   list = list.filter(x => x.id !== id);
   saveListings(list);
   renderBazaar();
@@ -249,8 +239,10 @@ function openProfile(username) {
   const u = username || currentUser();
   if (!u) return;
   const d = getData(u);
-  document.getElementById("profileName").textContent = u;
-  document.getElementById("profileSubtitle").textContent = "Level " + (typeof levelFromExp === "function" ? levelFromExp(d.exp || 0) : 1);
+  const nameEl = document.getElementById("profileName");
+  if (nameEl) nameEl.textContent = u;
+  const sub = document.getElementById("profileSubtitle");
+  if (sub) sub.textContent = "Level " + (typeof levelForExp === "function" ? levelForExp(d.exp || 0) : 1);
   const stats = document.getElementById("profileStats");
   if (stats) {
     const rows = [
@@ -281,15 +273,10 @@ function openProfile(username) {
       ? listings.map(L => '<div class="muted">' + L.blook + " ×" + (L.qty || 1) + " @ " + L.price + "</div>").join("")
       : '<p class="muted">No listings</p>';
   }
-  if (typeof renderUserBadges === "function") {
-    const pb2 = document.getElementById("profileBadges");
-    if (pb2) pb2.innerHTML = (d.badges || []).map(id =>
-      '<img class="badge-icon" src="badges/' + id + '.svg" alt="' + id + '" title="' + id + '">' 
-    ).join("");
-  }
   const src = getPfpSrc(d);
   applyPfpTo("profileAvatarImg", "profileAvatarLetter", src, (u.charAt(0) || "?").toUpperCase());
-  document.getElementById("profileModal").classList.add("open");
+  const modal = document.getElementById("profileModal");
+  if (modal) modal.classList.add("open");
 }
 
 function openEquipModal() {
@@ -307,11 +294,8 @@ function openEquipModal() {
           '<img src="' + (b ? b.img : "") + '" alt=""><span>' + n + "</span></button>";
       }).join("")
     : '<p class="muted">Own blooks to equip them</p>';
-  document.getElementById("equipModal").classList.add("open");
-}
-
-function closeEquipModal() {
-  document.getElementById("equipModal").classList.remove("open");
+  const modal = document.getElementById("equipModal");
+  if (modal) modal.classList.add("open");
 }
 
 function equipBlook(name) {
@@ -320,7 +304,7 @@ function equipBlook(name) {
   const d = getData(u);
   d.equipped = name;
   d.customPfp = null;
-  setData(u, d);
+  saveData(u, d);
   updatePfp(u);
   closeEquipModal();
   refreshUI();
@@ -331,7 +315,7 @@ function unequipBlook() {
   if (!u) return;
   const d = getData(u);
   d.equipped = null;
-  setData(u, d);
+  saveData(u, d);
   updatePfp(u);
   closeEquipModal();
   refreshUI();
@@ -346,7 +330,7 @@ function claimDaily() {
   const amt = (typeof CATALOG !== "undefined" && CATALOG.claimAmount) || 4000;
   d.tokens = (d.tokens || 0) + amt;
   d.lastClaim = today;
-  setData(u, d);
+  saveData(u, d);
   refreshUI();
   alert("Claimed " + amt + " tokens!");
 }
