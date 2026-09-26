@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="token.css" />
   <style>
     body { min-height: 100vh; color: #1a3a5c; }
-    .wrap { max-width: 580px; margin: 0 auto; padding: 28px 16px 48px; }
+    .wrap { max-width: 580px; margin: 0 auto; padding: 28px 16px 48px; position: relative; z-index: 2; }
     #gate { display: block; }
     #gate.hidden { display: none !important; }
     #panel { display: none; }
@@ -40,7 +40,7 @@
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="wrap" style="position:relative;z-index:2">
     <div id="gate">
       <h1>Co-owner Panel <span class="badge-tag">CO-OWNER</span></h1>
       <p class="sub">Enter the access code to unlock tools</p>
