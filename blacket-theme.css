@@ -1,0 +1,266 @@
+/* Musiclet — Blacket-inspired UI layer */
+
+/* ---- Stats profile (Blacket header style) ---- */
+.blacket-profile {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 18px 20px;
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 -6px rgba(0, 0, 0, 0.2);
+  margin-bottom: 18px;
+}
+
+.stats-pfp,
+#statsPfpBtn {
+  width: 96px !important;
+  height: 96px !important;
+  border-radius: 14px !important;
+  border: 4px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35) !important;
+  overflow: hidden !important;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Banner strip = whole name area (Blacket headerBanner) */
+.blacket-name-box,
+.blacket-name-box.banner-clickable,
+#bannerNameBox {
+  position: relative !important;
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 220px !important;
+  width: min(280px, 70vw) !important;
+  min-height: 64px !important;
+  height: 64px !important;
+  padding: 8px 16px !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  background-color: #3f3f3f !important;
+  background-size: cover !important;
+  background-position: center !important;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25) !important;
+  color: #fff !important;
+  text-align: center !important;
+}
+
+.blacket-name-box.has-banner::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(0, 0, 0, 0.35) 100%
+  ) !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+}
+
+.blacket-name-box .blacket-username,
+.blacket-name-box .blacket-sub {
+  position: relative !important;
+  z-index: 1 !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.85) !important;
+  width: 100%;
+  text-align: center !important;
+}
+
+.blacket-name-box .blacket-username {
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+  color: #fff !important;
+}
+
+.blacket-name-box .blacket-sub {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  margin-top: 2px !important;
+}
+
+.banner-behind,
+#statsBannerBehind {
+  display: none !important;
+}
+
+/* Level bar like Blacket */
+.blacket-xp-row {
+  margin-top: 10px;
+  max-width: 280px;
+}
+
+.blacket-xp-track {
+  flex: 1;
+  height: 16px !important;
+  border-radius: 10px !important;
+  background: #2f2f2f !important;
+  overflow: hidden !important;
+  border: 2px solid rgba(0, 0, 0, 0.35);
+}
+
+.blacket-xp-fill {
+  height: 100% !important;
+  background: linear-gradient(#fcd843, #fcd843 50%, #feb31a 50.01%, #feb31a) !important;
+  transform-origin: left center;
+  border-radius: 8px;
+}
+
+.blacket-lvl {
+  background: linear-gradient(180deg, #fcd843, #feb31a) !important;
+  color: #1a1a2e !important;
+  font-weight: 900 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* Action buttons — Blacket raised style */
+.blacket-btn {
+  border: none !important;
+  border-radius: 10px !important;
+  font-weight: 800 !important;
+  padding: 10px 14px !important;
+  box-shadow: inset 0 -4px rgba(0, 0, 0, 0.2) !important;
+  transition: filter 0.15s, transform 0.1s !important;
+}
+.blacket-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+.blacket-btn:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 -2px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Stats bar cards */
+.blacket-stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.blacket-stat {
+  flex: 1 1 140px;
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 14px;
+  padding: 14px 16px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 -5px rgba(0, 0, 0, 0.2);
+}
+.blacket-stat-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.blacket-stat-value {
+  font-size: 22px;
+  font-weight: 900;
+  color: #fde68a;
+  margin-top: 4px;
+}
+
+/* ---- Market pack cards ---- */
+.pack-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
+  gap: 16px !important;
+}
+.pack-card,
+.pack-grid .card {
+  background: rgba(0, 0, 0, 0.32) !important;
+  border-radius: 16px !important;
+  border: 3px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: inset 0 -6px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 0, 0, 0.25) !important;
+  padding: 14px !important;
+  transition: transform 0.12s, filter 0.12s !important;
+}
+.pack-card:hover,
+.pack-grid .card:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.05);
+}
+
+/* ---- Sidebar nav (Blacket-ish) ---- */
+.nav.sidebar,
+#nav {
+  background: rgba(0, 0, 0, 0.35) !important;
+  border-right: 2px solid rgba(255, 255, 255, 0.08);
+}
+.nav-item {
+  border-radius: 12px !important;
+  margin: 4px 8px !important;
+  font-weight: 800 !important;
+  transition: background 0.12s, transform 0.1s !important;
+}
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+.nav-item.active {
+  background: linear-gradient(180deg, #7c3aed, #5b21b6) !important;
+  box-shadow: inset 0 -4px rgba(0, 0, 0, 0.25) !important;
+  color: #fff !important;
+}
+
+/* ---- Page titles ---- */
+.page-head h1,
+.stats-title,
+.clans-title,
+.lb-title,
+.chat-title {
+  font-weight: 900 !important;
+  font-style: italic !important;
+  letter-spacing: 0.02em;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* ---- Cards / settings ---- */
+.card,
+.settings-card {
+  background: rgba(0, 0, 0, 0.28) !important;
+  border: 2px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  box-shadow: inset 0 -5px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ---- Buttons ---- */
+.btn {
+  box-shadow: inset 0 -4px rgba(0, 0, 0, 0.2) !important;
+  font-weight: 800 !important;
+  border-radius: 10px !important;
+}
+.btn:active {
+  box-shadow: inset 0 -2px rgba(0, 0, 0, 0.2) !important;
+  transform: translateY(1px);
+}
+
+/* ---- Bazaar / blooks rows ---- */
+.bazaar-list .bazaar-item,
+.blook-row,
+.blook-card {
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ---- Topbar ---- */
+.topbar {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+}
+.token-pill {
+  background: rgba(0, 0, 0, 0.35) !important;
+  border: 2px solid rgba(251, 191, 36, 0.4) !important;
+  border-radius: 999px !important;
+  font-weight: 800 !important;
+}
